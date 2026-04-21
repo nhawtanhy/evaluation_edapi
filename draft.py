@@ -22,11 +22,7 @@ tokenizer.padding_side = "left"
 # IMPORTANT: use correct instruction format
 # (your model is EDAPI/instruction tuned, NOT raw chat)
 # =========================
-prompt = """### Instruction:
-Write a simple sentence.
-
-### Response:
-"""
+prompt = "import pandas as pd\nimport numpy as np\n\n# Create a dataframe\ndf = pd."
 
 # =========================
 # Tokenize
