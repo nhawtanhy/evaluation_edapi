@@ -59,12 +59,53 @@ def extract_all_identifiers(code):
     return words | sub_words | calls
 
 def build_augmented_prompt(probing_input, retrieved_docs):
-    if not retrieved_docs: return probing_input
-    doc = retrieved_docs[0]
-    header = (f"# INSTRUCTION: Replace the deprecated API.\n"
-              f"# DEPRECATED: {doc['deprecated_api']}\n"
-              f"# REPLACEMENT: {doc['replacement_api']}\n")
-    return f"{header}# ---\n# Task: Complete the code.\n{probing_input.rstrip()}"
+    if not retrieved_docs:
+        return probing_input
+
+    context_blocks = []
+
+    for i, doc in enumerate(retrieved_docs[:3], 1):
+        example = ""
+        if doc.get("usage_examples"):
+            example = doc["usage_examples"][0]
+
+        tag = " (MOST RELEVANT)" if i == 1 else ""
+
+        block = f"""
+[{i}]{tag}
+Deprecated: {doc['deprecated_api']}
+Replacement: {doc['replacement_api']}
+Description: {doc.get('description', '')}
+Example:
+{example}
+"""
+        context_blocks.append(block.strip())
+
+    context = "\n\n".join(context_blocks)
+
+    # Explicitly guide model to pick doc [1]
+    main_replacement = retrieved_docs[0]['replacement_api']
+
+    return f"""
+You are an expert Python developer.
+
+Your task: Replace deprecated APIs with the correct modern API.
+
+Reference information:
+{context}
+
+Rules:
+- The MOST RELEVANT API is [1]
+- You MUST use: {main_replacement}
+- Do NOT use any deprecated API
+- Prefer API from [1] over others
+- Output ONLY valid Python code
+- Do NOT explain or add comments
+
+Now complete the following code:
+
+{probing_input.rstrip()}
+"""
 
 def compute_edit_quality(
     model,
@@ -156,7 +197,11 @@ def compute_edit_quality(
     # Generate RAG prompts
     rag_intent, retrieved_apis, is_ret_corr, mrr_val = get_rag_prompt(intent)
     rag_rephrase, _, _, _ = get_rag_prompt(rewritten_intent)
-    
+
+    if not is_ret_corr:
+        rag_intent = intent
+        rag_rephrase = rewritten_intent  # keep consistency
+
     prompts_to_generate = [rag_intent, rag_rephrase]
     
     if portability != "":

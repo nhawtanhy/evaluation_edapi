@@ -241,6 +241,18 @@
     "notes": "scipy.linalg.pinv2 was deprecated as pinv now provides the same SVD-based functionality. The cut-off for singular values is determined by atol + rtol * max_singular_value. Supports batched operations."
   },
   {
+    "deprecated_api": "scipy.misc.comb",
+    "replacement_api": "scipy.special.comb",
+    "description": "The number of combinations of N things taken k at a time ('N choose k').",
+    "signature": "comb(N, k, *, exact=False, repetition=False)",
+    "usage_examples": [
+      "comb(10, 3, exact=True)",
+      "comb(10, 3, exact=True, repetition=True)",
+      "comb(np.array([10, 10]), np.array([3, 4]), exact=False)"
+    ],
+    "notes": "scipy.misc.comb was moved to scipy.special.comb. Use exact=True for integer results; floating point is used otherwise. Array arguments are only accepted when exact=False."
+  },
+  {
     "deprecated_api": "scipy.misc.face",
     "replacement_api": "scipy.datasets.face",
     "description": "Get a 1024 x 768, color image of a raccoon face.",
@@ -275,18 +287,6 @@
       "factorial2(np.array([5, 6]))"
     ],
     "notes": "Moved from scipy.misc to scipy.special. For an odd integer $n$, $n!! = n × (n-2) × … × 1$. Using the 'complex' extension changes behavior for even integers due to a gamma-based approximation."
-  },
-  {
-    "deprecated_api": "scipy.misc.comb",
-    "replacement_api": "scipy.special.comb",
-    "description": "The number of combinations of N things taken k at a time ('N choose k').",
-    "signature": "comb(N, k, *, exact=False, repetition=False)",
-    "usage_examples": [
-      "comb(10, 3, exact=True)",
-      "comb(10, 3, exact=True, repetition=True)",
-      "comb(np.array([10, 10]), np.array([3, 4]), exact=False)"
-    ],
-    "notes": "scipy.misc.comb was moved to scipy.special.comb. Use exact=True for integer results; floating point is used otherwise. Array arguments are only accepted when exact=False."
   },
   {
     "deprecated_api": "scipy.misc.logsumexp",
@@ -842,6 +842,44 @@
       "model.freeze_feature_encoder()"
     ],
     "notes": "Renamed for consistency across the Transformers library's audio models. This method ensures that the weight parameters of the initial convolutional feature extraction layers remain fixed while fine-tuning the CTC head."
+  },
+  {
+    "deprecated_api": "pandas.DataFrame.select",
+    "replacement_api": "pandas.DataFrame.loc",
+    "description": "Selects columns from a DataFrame based on a predicate (criterion function) applied to the column labels.",
+    "signature": "pandas.DataFrame.select(crit, axis=1)",
+    "usage_examples": [
+      "# Deprecated usage:",
+      "df.select(lambda x: x.startswith('prefix'), axis=1)",
+      "# Modern replacement using .loc:",
+      "df.loc[:, [col for col in df.columns if col.startswith('prefix')]]",
+      "df.loc[:, df.columns.str.startswith('prefix')]"
+    ],
+    "notes": "The .select() method was deprecated in pandas 0.21.0. While .loc is the primary replacement for explicit label selection, the .filter() method is often more convenient for pattern-based column selection: df.filter(like='prefix')."
+  },
+  {
+    "deprecated_api": "scipy.misc.comb",
+    "replacement_api": "scipy.special.comb",
+    "description": "The number of combinations of N things taken k at a time ('N choose k').",
+    "signature": "scipy.special.comb(N, k, exact=False, repetition=False)",
+    "usage_examples": [
+      "from scipy.special import comb",
+      "res = comb(10, 3, exact=True)",
+      "res_with_rep = comb(10, 3, repetition=True)"
+    ],
+    "notes": "Importing 'comb' from scipy.misc was deprecated in SciPy 1.0.0 and removed in later versions. The special.comb version is identical in functionality and signature. For large N/k and exact=False, it uses the binomial coefficient approximation."
+  },
+  {
+    "deprecated_api": "transformers.DPTFeatureExtractor",
+    "replacement_api": "transformers.DPTImageProcessor",
+    "description": "Constructs a DPT image processor for preprocessing images for Dense Prediction Transformer (DPT) models.",
+    "signature": "class transformers.DPTImageProcessor(do_resize=True, size=384, resample=2, do_normalize=True, image_mean=[0.5, 0.5, 0.5], image_std=[0.5, 0.5, 0.5], **kwargs)",
+    "usage_examples": [
+      "from transformers import DPTImageProcessor",
+      "processor = DPTImageProcessor.from_pretrained('intel/dpt-large')",
+      "inputs = processor(images, return_tensors='pt')"
+    ],
+    "notes": "Part of the library-wide transition from FeatureExtractors to ImageProcessors. It handles image resizing (typically to 384x384) and normalization with a mean and standard deviation of 0.5 for all channels."
   },
   {
     "deprecated_api": "transformers.UniSpeechSatForCTC.freeze_feature_extractor",
