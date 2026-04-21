@@ -1,0 +1,1524 @@
+[
+  {
+    "deprecated_api": "numpy.alltrue",
+    "replacement_api": "numpy.all",
+    "description": "Test whether all array elements along a given axis evaluate to True.",
+    "signature": "numpy.all(a, axis=None, out=None, keepdims=<no value>, *, where=<no value>)",
+    "usage_examples": [
+      "np.all([[True, False], [True, True]])",
+      "np.all([[True, False], [True, True]], axis=0)",
+      "np.all([-1, 4, 5])",
+      "np.all([[True, True], [False, True]], where=[[True], [False]])"
+    ],
+    "notes": "numpy.alltrue is a deprecated alias of numpy.all. Note that as of NumPy 2.0, the behavior for object dtype input arrays has changed; for the old behavior, use np.logical_and.reduce."
+  },
+  {
+    "deprecated_api": "numpy.cumproduct",
+    "replacement_api": "numpy.cumprod",
+    "description": "Return the cumulative product of elements along a given axis.",
+    "signature": "numpy.cumprod(a, axis=None, dtype=None, out=None)",
+    "usage_examples": [
+      "np.cumprod(np.array([1, 2, 3]))",
+      "np.cumprod(a, dtype=float)",
+      "np.cumprod(a, axis=0)"
+    ],
+    "notes": "numpy.cumproduct is a deprecated alias of numpy.cumprod. Arithmetic is modular when using integer types, and no error is raised on overflow."
+  },
+  {
+    "deprecated_api": "numpy.product",
+    "replacement_api": "numpy.prod",
+    "description": "Return the product of array elements over a given axis.",
+    "signature": "numpy.prod(a, axis=None, dtype=None, out=None, keepdims=<no value>, initial=<no value>, where=<no value>)",
+    "usage_examples": [
+      "np.prod([1.0, 2.0])",
+      "np.prod(a, axis=1)",
+      "np.prod([1.0, np.nan, 3.0], where=[True, False, True])",
+      "np.prod([1, 2], initial=5)"
+    ],
+    "notes": "numpy.product is a deprecated alias of numpy.prod. The product of an empty array is the neutral element 1.0. Like cumprod, arithmetic is modular for integer types."
+  },
+  {
+    "deprecated_api": "pandas.DataFrame.applymap",
+    "replacement_api": "pandas.DataFrame.map",
+    "description": "Apply a function to a Dataframe elementwise.",
+    "signature": "DataFrame.map(func, na_action=None, **kwargs)",
+    "usage_examples": [
+      "df.map(lambda x: len(str(x)))",
+      "df.map(lambda x: len(str(x)), na_action='ignore')",
+      "df.map(round, ndigits=1)"
+    ],
+    "notes": "Added in version 2.1.0 to replace applymap. Vectorized operations are significantly faster than map; avoid using map for simple arithmetic or operations where a vectorized version exists."
+  },
+  {
+    "deprecated_api": "pandas.DataFrame.first",
+    "replacement_api": "pandas.DataFrame.loc",
+    "description": "Access a group of rows and columns by label(s) or a boolean array.",
+    "signature": "property DataFrame.loc",
+    "usage_examples": [
+      "df.loc['viper']",
+      "df.loc[['cobra', 'viper'], 'max_speed']",
+      "df.loc[df['shield'] > 6]"
+    ],
+    "notes": "The .first() and .last() methods were deprecated in favor of label-based indexing via .loc. Note that unlike standard Python slices, .loc slices include both the start and the stop labels."
+  },
+  {
+    "deprecated_api": "pandas.DataFrame.iteritems",
+    "replacement_api": "pandas.DataFrame.items",
+    "description": "Iterate over (column name, Series) pairs.",
+    "signature": "DataFrame.items()",
+    "usage_examples": [
+      "for label, content in df.items():",
+      "    print(f'Column: {label}')"
+    ],
+    "notes": "Iterates over the DataFrame columns, returning a tuple with the column name and the content as a Series. Replacement for the deprecated iteritems method."
+  },  
+  {
+    "deprecated_api": "pandas.DataFrame.pad",
+    "replacement_api": "pandas.DataFrame.ffill",
+    "description": "Fill NA/NaN values by propagating the last valid observation to next valid.",
+    "signature": "DataFrame.ffill(*, axis=None, inplace=False, limit=None, limit_area=None)",
+    "usage_examples": [
+      "df.ffill()",
+      "ser.ffill()",
+      "df.ffill(axis='columns')",
+      "df.ffill(limit=2)"
+    ],
+    "notes": "pandas.DataFrame.pad is a deprecated alias for pandas.DataFrame.ffill. limit_area (added in 2.2.0) allows restricting fills to 'inside' or 'outside' valid values."
+  },
+  {
+    "deprecated_api": "pandas.DataFrame.swapaxes",
+    "replacement_api": "pandas.DataFrame.transpose",
+    "description": "Transpose index and columns by reflecting the DataFrame over its main diagonal.",
+    "signature": "DataFrame.transpose(*args, copy=<no_default>)",
+    "usage_examples": [
+      "df.T",
+      "df.transpose()",
+      "df.transpose(copy=False)"
+    ],
+    "notes": "pandas.DataFrame.swapaxes was deprecated in favor of .transpose() or the .T accessor. Note: As of pandas 3.0.0, the 'copy' keyword is ignored and will be removed in 4.0; transposing mixed dtypes will always result in object dtype."
+  },
+  {
+    "deprecated_api": "pandas.Series.iteritems",
+    "replacement_api": "pandas.Series.items",
+    "description": "Lazily iterate over (index, value) tuples.",
+    "signature": "Series.items()",
+    "usage_examples": [
+      "for index, value in s.items():",
+      "    print(f'Index: {index}, Value: {value}')"
+    ],
+    "notes": "pandas.Series.iteritems is a deprecated alias for pandas.Series.items. Returns an iterable of tuples, making it convenient for lazy iteration."
+  },
+  {
+    "deprecated_api": "pandas.Series.pad",
+    "replacement_api": "pandas.Series.ffill",
+    "description": "Fill NA/NaN values by propagating the last valid observation to next valid.",
+    "signature": "Series.ffill(*, axis=None, inplace=False, limit=None, limit_area=None)",
+    "usage_examples": [
+      "ser.ffill()",
+      "ser.ffill(limit=2)",
+      "ser.ffill(limit_area='inside')"
+    ],
+    "notes": "pandas.Series.pad is a deprecated alias for pandas.Series.ffill. The 'limit_area' parameter (added in 2.2.0) allows for restricting fills to 'inside' (surrounded by valid values) or 'outside' (extrapolating at edges)."
+  },
+  {
+    "deprecated_api": "pandas.io.formats.style.Styler.render",
+    "replacement_api": "pandas.io.formats.style.Styler.to_html",
+    "description": "Write Styler to a file, buffer or string in HTML-CSS format.",
+    "signature": "Styler.to_html(buf=None, *, table_uuid=None, table_attributes=None, sparse_index=None, sparse_columns=None, bold_headers=False, caption=None, max_rows=None, max_columns=None, encoding=None, doctype_html=False, exclude_styles=False, **kwargs)",
+    "usage_examples": [
+      "df.style.to_html()",
+      "df.style.to_html(buf='report.html')",
+      "df.style.to_html(caption='My Table', bold_headers=True)"
+    ],
+    "notes": "Styler.render was renamed to Styler.to_html for better naming consistency with other pandas output methods. It provides extensive control over CSS styling, table attributes, and sparsification for hierarchical indexes."
+  },
+  {
+    "deprecated_api": "sklearn.datasets.fetch_mldata",
+    "replacement_api": "sklearn.datasets.fetch_openml",
+    "description": "Fetch dataset from OpenML by name or dataset id.",
+    "signature": "sklearn.datasets.fetch_openml(name=None, *, version='active', data_id=None, data_home=None, target_column='default-target', cache=True, return_X_y=False, as_frame='auto', n_retries=3, delay=1.0, parser='auto', read_csv_kwargs=None)",
+    "usage_examples": [
+      "from sklearn.datasets import fetch_openml",
+      "adult = fetch_openml('adult', version=2)",
+      "X, y = fetch_openml('mnist_784', version=1, return_X_y=True)"
+    ],
+    "notes": "Added in version 0.20 to replace the deprecated fetch_mldata. This API is considered experimental. It is highly recommended to specify an exact version as names on OpenML are not unique. The default 'as_frame' behavior changed to 'auto' in 0.24."
+  },
+  {
+    "deprecated_api": "sklearn.metrics.jaccard_similarity_score",
+    "replacement_api": "sklearn.metrics.jaccard_score",
+    "description": "Jaccard similarity coefficient score, defined as the size of the intersection divided by the size of the union of two label sets.",
+    "signature": "sklearn.metrics.jaccard_score(y_true, y_pred, *, labels=None, pos_label=1, average='binary', sample_weight=None, zero_division='warn')",
+    "usage_examples": [
+      "jaccard_score(y_true, y_pred)",
+      "jaccard_score(y_true, y_pred, average='micro')",
+      "jaccard_score(y_true, y_pred, average='samples')",
+      "jaccard_score(y_true, y_pred, average=None)"
+    ],
+    "notes": "Replaces the deprecated jaccard_similarity_score. Supports binary, multiclass, and multilabel targets. For multiclass/multilabel, the 'average' parameter determines how scores for each label are combined."
+  },
+  {
+    "deprecated_api": "sklearn.mixture.GMM",
+    "replacement_api": "sklearn.mixture.GaussianMixture",
+    "description": "Representation of a Gaussian mixture model probability distribution and parameter estimation.",
+    "signature": "class sklearn.mixture.GaussianMixture(n_components=1, *, covariance_type='full', tol=0.001, reg_covar=1e-06, max_iter=100, n_init=1, init_params='kmeans', weights_init=None, means_init=None, precisions_init=None, random_state=None, warm_start=False, verbose=0, verbose_interval=10)",
+    "usage_examples": [
+      "from sklearn.mixture import GaussianMixture",
+      "gm = GaussianMixture(n_components=2, random_state=0).fit(X)",
+      "gm.predict([[0, 0], [12, 3]])",
+      "gm.predict_proba(X)"
+    ],
+    "notes": "Added in version 0.18 to replace the old GMM class. Includes enhanced initialization methods like 'k-means++' and 'random_from_data' (added in v1.1). Storing precision matrices internally makes log-likelihood computation more efficient."
+  },
+  {
+    "deprecated_api": "sklearn.preprocessing.Imputer",
+    "replacement_api": "sklearn.impute.SimpleImputer",
+    "description": "Univariate imputer for completing missing values using simple strategies like mean, median, most frequent, or a constant.",
+    "signature": "class sklearn.impute.SimpleImputer(*, missing_values=nan, strategy='mean', fill_value=None, copy=True, add_indicator=False, keep_empty_features=False)",
+    "usage_examples": [
+      "from sklearn.impute import SimpleImputer",
+      "imp_mean = SimpleImputer(missing_values=np.nan, strategy='mean')",
+      "imp_mean.fit([[7, 2, 3], [4, np.nan, 6], [10, 5, 9]])",
+      "imp_mean.transform(X)"
+    ],
+    "notes": "SimpleImputer replaced the previous sklearn.preprocessing.Imputer estimator in version 0.20. It supports 'constant' strategy and custom callables for imputation (as of version 1.5). Features consisting only of missing values are discarded by default unless keep_empty_features=True."
+  },
+  {
+    "deprecated_api": "scipy.integrate.cumtrapz",
+    "replacement_api": "scipy.integrate.cumulative_trapezoid",
+    "description": "Cumulatively integrate y(x) using the composite trapezoidal rule.",
+    "signature": "cumulative_trapezoid(y, x=None, dx=1.0, axis=-1, initial=None)",
+    "usage_examples": [
+      "integrate.cumulative_trapezoid(y, x, initial=0)",
+      "integrate.cumulative_trapezoid(y, dx=0.5)"
+    ],
+    "notes": "If 'initial' is None (default), the resulting array has one element less than y along the axis of integration. If 'initial' is 0, the shape matches y. Features experimental support for the Python Array API Standard (PyTorch, JAX, etc.)."
+  },
+  {
+    "deprecated_api": "scipy.integrate.simps",
+    "replacement_api": "scipy.integrate.simpson",
+    "description": "Integrate y(x) using samples along the given axis and the composite Simpson's rule.",
+    "signature": "simpson(y, x=None, *, dx=1.0, axis=-1)",
+    "usage_examples": [
+      "integrate.simpson(y, x=x)",
+      "integrate.simpson(y, dx=2.0)"
+    ],
+    "notes": "Renamed for clarity. For equally spaced samples, it is exact for polynomials of order 3 or less. For irregularly spaced samples, it is exact for order 2 or less."
+  },
+  {
+    "deprecated_api": "scipy.integrate.trapz",
+    "replacement_api": "scipy.integrate.trapezoid",
+    "description": "Integrate along the given axis using the composite trapezoidal rule.",
+    "signature": "trapezoid(y, x=None, dx=1.0, axis=-1)",
+    "usage_examples": [
+      "integrate.trapezoid([1, 2, 3])",
+      "integrate.trapezoid([1, 2, 3], x=[4, 6, 8])",
+      "integrate.trapezoid(y, x=x, axis=0)"
+    ],
+    "notes": "Renamed to avoid conflict with other 'trapz' implementations. Can be used for integration along parametric curves. Returns a float for 1D arrays and an (n-1) dimensional array for higher dimensions."
+  },
+  {
+    "deprecated_api": "scipy.interpolate.interp2d",
+    "replacement_api": "scipy.interpolate.bisplev",
+    "description": "Evaluate a bivariate B-spline and its derivatives.",
+    "signature": "bisplev(x, y, tck, dx=0, dy=0)",
+    "usage_examples": [
+      "scipy.interpolate.bisplev(x, y, tck)",
+      "scipy.interpolate.bisplev(x_new, y_new, tck, dx=1, dy=0)"
+    ],
+    "notes": "scipy.interpolate.interp2d was deprecated in SciPy 1.10.0 and removed in 1.14.0. bisplev evaluates a spline over the cross-product of two rank-1 arrays. Requires a tck representation typically generated by bisplrep."
+  },
+  {
+    "deprecated_api": "scipy.linalg.pinv2",
+    "replacement_api": "scipy.linalg.pinv",
+    "description": "Compute the (Moore-Penrose) pseudo-inverse of a matrix using SVD.",
+    "signature": "pinv(a, *, atol=None, rtol=None, return_rank=False, check_finite=True)",
+    "usage_examples": [
+      "linalg.pinv(A)",
+      "linalg.pinv(A, return_rank=True)",
+      "linalg.pinv(A, atol=1e-3, rtol=1e-6)"
+    ],
+    "notes": "scipy.linalg.pinv2 was deprecated as pinv now provides the same SVD-based functionality. The cut-off for singular values is determined by atol + rtol * max_singular_value. Supports batched operations."
+  },
+  {
+    "deprecated_api": "scipy.misc.face",
+    "replacement_api": "scipy.datasets.face",
+    "description": "Get a 1024 x 768, color image of a raccoon face.",
+    "signature": "face(gray=False)",
+    "usage_examples": [
+      "import scipy.datasets",
+      "face_data = scipy.datasets.face()",
+      "face_gray = scipy.datasets.face(gray=True)"
+    ],
+    "notes": "scipy.misc.face is deprecated; image datasets have been moved to the scipy.datasets module. The raccoon image is a standard test image in the Scipy ecosystem."
+  },
+  {
+    "deprecated_api": "scipy.misc.factorial",
+    "replacement_api": "scipy.special.factorial",
+    "description": "The factorial of a number or array of numbers ($n!$).",
+    "signature": "factorial(n, exact=False, extend='zero')",
+    "usage_examples": [
+      "from scipy.special import factorial",
+      "factorial(5, exact=True)",
+      "factorial([1, 2, 3, 4])"
+    ],
+    "notes": "Moved from scipy.misc to scipy.special. When exact=False (default), it approximates using the gamma function. For exact=True, it uses integer arithmetic and can return object-type arrays for very large integers."
+  },
+  {
+    "deprecated_api": "scipy.misc.factorial2",
+    "replacement_api": "scipy.special.factorial2",
+    "description": "Double factorial ($n!!$), defined as the factorial with every second value skipped.",
+    "signature": "factorial2(n, exact=False, extend='zero')",
+    "usage_examples": [
+      "from scipy.special import factorial2",
+      "factorial2(7, exact=True)",
+      "factorial2(np.array([5, 6]))"
+    ],
+    "notes": "Moved from scipy.misc to scipy.special. For an odd integer $n$, $n!! = n × (n-2) × … × 1$. Using the 'complex' extension changes behavior for even integers due to a gamma-based approximation."
+  },
+  {
+    "deprecated_api": "scipy.misc.comb",
+    "replacement_api": "scipy.special.comb",
+    "description": "The number of combinations of N things taken k at a time ('N choose k').",
+    "signature": "comb(N, k, *, exact=False, repetition=False)",
+    "usage_examples": [
+      "comb(10, 3, exact=True)",
+      "comb(10, 3, exact=True, repetition=True)",
+      "comb(np.array([10, 10]), np.array([3, 4]), exact=False)"
+    ],
+    "notes": "scipy.misc.comb was moved to scipy.special.comb. Use exact=True for integer results; floating point is used otherwise. Array arguments are only accepted when exact=False."
+  },
+  {
+    "deprecated_api": "scipy.misc.logsumexp",
+    "replacement_api": "scipy.special.logsumexp",
+    "description": "Compute the log of the sum of exponentials of input elements.",
+    "signature": "logsumexp(a, axis=None, b=None, keepdims=False, return_sign=False)",
+    "usage_examples": [
+      "scipy.special.logsumexp(a)",
+      "scipy.special.logsumexp(a, b=scaling_factors)",
+      "scipy.special.logsumexp(a, axis=(0, 1), keepdims=True)",
+      "scipy.special.logsumexp(a, return_sign=True)"
+    ],
+    "notes": "Calculates $\\log(\\sum(e^a))$ in a numerically stable way. If the scaling factor 'b' is provided, it computes $\\log(\\sum(b \\cdot e^a))$. Support for sign information was added in version 0.16.0 to handle negative results."
+  },
+  {
+    "deprecated_api": "scipy.signal.hanning",
+    "replacement_api": "scipy.signal.windows.hann",
+    "description": "Return a Hann window, a taper formed by using a raised cosine or sine-squared with ends that touch zero.",
+    "signature": "hann(M, sym=True, *, xp=None, device=None)",
+    "usage_examples": [
+      "signal.windows.hann(51)",
+      "signal.windows.hann(M, sym=False)"
+    ],
+    "notes": "scipy.signal.hanning is a deprecated alias. Use sym=True for filter design and sym=False for spectral analysis. It is frequently used for smoothing, apodization, or tapering discontinuities in sampled signals."
+  },
+  {
+    "deprecated_api": "scipy.special.errprint",
+    "replacement_api": "scipy.special.seterr",
+    "description": "Set how special-function errors (singularities, overflows, etc.) are handled.",
+    "signature": "seterr(**kwargs)",
+    "usage_examples": [
+      "scipy.special.seterr(singular='raise')",
+      "scipy.special.seterr(all='ignore')",
+      "scipy.special.seterr(underflow='warn', overflow='raise')"
+    ],
+    "notes": "Replaces errprint. Allows granular control over errors like 'singular', 'underflow', 'overflow', 'slow', and 'loss'. Returns a dictionary of the previous settings. Works similarly to numpy.seterr but for special functions."
+  },
+  {
+    "deprecated_api": "scipy.special.sph_jn",
+    "replacement_api": "scipy.special.spherical_jn",
+    "description": "Spherical Bessel function of the first kind or its derivative.",
+    "signature": "spherical_jn(n, z, derivative=False)",
+    "usage_examples": [
+      "from scipy.special import spherical_jn",
+      "spherical_jn(0, 3+5j)",
+      "spherical_jn(3, x, derivative=True)",
+      "for n in np.arange(0, 4): plt.plot(x, spherical_jn(n, x))"
+    ],
+    "notes": "Added in version 0.18.0. Defined as $j_n(z) = \\sqrt{\\frac{\\pi}{2z}} J_{n+1/2}(z)$. For real arguments greater than the order, it is computed using ascending recurrence. For small or complex arguments, it uses the relation to cylindrical Bessel functions."
+  },
+  {
+    "deprecated_api": "scipy.special.sph_yn",
+    "replacement_api": "scipy.special.spherical_yn",
+    "description": "Spherical Bessel function of the second kind or its derivative.",
+    "signature": "spherical_yn(n, z, derivative=False)",
+    "usage_examples": [
+      "from scipy.special import spherical_yn",
+      "spherical_yn(0, 3+5j)",
+      "spherical_yn(3, x, derivative=True)",
+      "spherical_yn(n, x)"
+    ],
+    "notes": "Added in version 0.18.0. Defined as $y_n(z) = \\sqrt{\\frac{\\pi}{2z}} Y_{n+1/2}(z)$. Computes values using ascending recurrence for real arguments and the definitional relation to cylindrical Bessel functions for complex arguments."
+  },
+  {
+    "deprecated_api": "scipy.stats.betai",
+    "replacement_api": "scipy.special.betainc",
+    "description": "Regularized incomplete beta function.",
+    "signature": "betainc(a, b, x, out=None)",
+    "usage_examples": [
+      "import scipy.special as sc",
+      "sc.betainc(0.2, 3.5, 1.0)",
+      "sc.betainc(2.2, 3.1, 0.4)",
+      "1 - sc.betainc(3.1, 2.2, 1 - 0.4)"
+    ],
+    "notes": "scipy.stats.betai was moved to scipy.special.betainc. It serves as the cumulative distribution function (CDF) for the beta distribution with a range of $[0, 1]$. It features experimental support for the Python Array API Standard (PyTorch, JAX, Dask)."
+  },
+  {
+    "deprecated_api": "scipy.stats.chisqprob",
+    "replacement_api": "scipy.stats.chi2.sf",
+    "description": "Survival function (1 - cdf) for the chi-squared continuous random variable.",
+    "signature": "chi2.sf(x, df, loc=0, scale=1)",
+    "usage_examples": [
+      "from scipy.stats import chi2",
+      "p_value = chi2.sf(x, df)",
+      "chi2.sf(3.84, 1)"
+    ],
+    "notes": "scipy.stats.chisqprob was a legacy alias for the survival function of the chi-squared distribution. Using .sf() is preferred as it is often more numerically accurate than 1 - cdf for values in the upper tail."
+  },
+  {
+    "deprecated_api": "scipy.stats.itemfreq",
+    "replacement_api": "scipy.stats.binned_statistic",
+    "description": "Compute a binned statistic for one or more sets of data; a generalization of a histogram.",
+    "signature": "binned_statistic(x, values, statistic='mean', bins=10, range=None)",
+    "usage_examples": [
+      "stats.binned_statistic(x, values, statistic='sum', bins=2)",
+      "stats.binned_statistic(x, values, statistic='median', bins=[1, 2, 3, 4, 5])",
+      "stats.binned_statistic(x, values, statistic='count')"
+    ],
+    "notes": "scipy.stats.itemfreq is deprecated in favor of binned_statistic. This function supports various statistics ('mean', 'std', 'median', 'count', 'sum', 'min', 'max') or custom callables. It also has experimental support for the Python Array API Standard."
+  },
+  {
+    "deprecated_api": "scipy.stats.rvs_ratio_uniforms",
+    "replacement_api": "scipy.stats.sampling.RatioUniforms",
+    "description": "Generate random samples from a probability density function using the ratio-of-uniforms method.",
+    "signature": "class RatioUniforms(pdf, *, umax, vmin, vmax, c=0, random_state=None)",
+    "usage_examples": [
+      "from scipy.stats.sampling import RatioUniforms",
+      "gen = RatioUniforms(f, umax=umax, vmin=-v, vmax=v, random_state=rng)",
+      "samples = gen.rvs(size=2500)"
+    ],
+    "notes": "The standalone rvs_ratio_uniforms function is deprecated. The RatioUniforms class provides a more robust interface for sampling without needing to invert the CDF. It requires a bounding rectangle defined by umax, vmin, and vmax."
+  },
+  {
+    "deprecated_api": "seaborn.despine",
+    "replacement_api": "seaborn.utils.despine",
+    "description": "Remove the top and right spines from plot(s).",
+    "signature": "seaborn.despine(fig=None, ax=None, top=True, right=True, left=False, bottom=False, offset=None, trim=False)",
+    "usage_examples": [
+      "sns.despine()",
+      "sns.despine(top=False, right=False)",
+      "sns.despine(offset=10, trim=True)",
+      "sns.despine(ax=ax)"
+    ],
+    "notes": "Used to clean up the aesthetics of a plot by removing unnecessary boundaries. A dictionary can be used for the 'offset' parameter to set side-specific values."
+  },
+  {
+    "deprecated_api": "seaborn.factorplot",
+    "replacement_api": "seaborn.catplot",
+    "description": "Figure-level interface for drawing categorical plots onto a FacetGrid.",
+    "signature": "seaborn.catplot(data=None, *, x=None, y=None, hue=None, row=None, col=None, kind='strip', estimator='mean', errorbar=('ci', 95), n_boot=1000, seed=None, units=None, weights=None, order=None, hue_order=None, row_order=None, col_order=None, col_wrap=None, height=5, aspect=1, log_scale=None, native_scale=False, formatter=None, orient=None, color=None, palette=None, hue_norm=None, legend='auto', legend_out=True, sharex=True, sharey=True, margin_titles=False, facet_kws=None, ci='deprecated', **kwargs)",
+    "usage_examples": [
+      "sns.catplot(data=df, x='day', y='total_bill', kind='box')",
+      "sns.catplot(data=df, x='time', y='pulse', hue='kind', col='diet', kind='violin')",
+      "sns.catplot(data=df, x='class', kind='count')"
+    ],
+    "notes": "seaborn.factorplot was renamed to seaborn.catplot for better clarity. The 'kind' parameter selects the axes-level function (strip, swarm, box, violin, boxen, point, bar, or count). Returns a FacetGrid."
+  },
+  {
+    "deprecated_api": "seaborn.tsplot",
+    "replacement_api": "seaborn.lineplot",
+    "description": "Draw a line plot with the possibility of several semantic groupings and aggregation.",
+    "signature": "seaborn.lineplot(data=None, *, x=None, y=None, hue=None, size=None, style=None, units=None, weights=None, palette=None, hue_order=None, hue_norm=None, sizes=None, size_order=None, size_norm=None, dashes=True, markers=None, style_order=None, estimator='mean', errorbar=('ci', 95), n_boot=1000, seed=None, orient='x', sort=True, err_style='band', err_kws=None, legend='auto', ci='deprecated', ax=None, **kwargs)",
+    "usage_examples": [
+      "sns.lineplot(data=flights, x='year', y='passengers')",
+      "sns.lineplot(data=fmri, x='timepoint', y='signal', hue='event', style='region')",
+      "sns.lineplot(data=df, x='x', y='y', errorbar='sd')"
+    ],
+    "notes": "seaborn.tsplot was deprecated in favor of seaborn.lineplot. lineplot automatically aggregates across multiple observations at each x-value to show a central tendency and confidence interval."
+  },
+  {
+    "deprecated_api": "torch.btriunpack",
+    "replacement_api": "torch.lu_unpack",
+    "description": "Unpacks the LU decomposition returned by lu_factor() into the P, L, and U matrices.",
+    "signature": "torch.lu_unpack(LU_data, LU_pivots, unpack_data=True, unpack_pivots=True, *, out=None)",
+    "usage_examples": [
+      "LU, pivots = torch.linalg.lu_factor(A)",
+      "P, L, U = torch.lu_unpack(LU, pivots)",
+      "A_recovered = P @ L @ U"
+    ],
+    "notes": "Returns a namedtuple (P, L, U). Note that torch.linalg.lu() is generally more efficient for gradient computations than the combined use of lu_factor() and lu_unpack()."
+  },
+  {
+    "deprecated_api": "torch.chain_matmul",
+    "replacement_api": "torch.linalg.multi_dot",
+    "description": "Efficiently multiplies two or more matrices by reordering the multiplications to minimize the total number of arithmetic operations.",
+    "signature": "torch.linalg.multi_dot(tensors, *, out=None)",
+    "usage_examples": [
+      "torch.linalg.multi_dot([torch.tensor([1, 2]), torch.tensor([2, 3])])",
+      "torch.linalg.multi_dot((A, B, C))"
+    ],
+    "notes": "Does not support batched inputs or broadcasting. Every tensor must be 2D, except for the first and last which may be 1D. Optimal order is calculated based on the cost of multiplying matrix shapes $(a, b)$ and $(b, c)$ being $a \times b \times c$."
+  },
+  {
+    "deprecated_api": "torch.cholesky",
+    "replacement_api": "torch.linalg.cholesky",
+    "description": "Computes the Cholesky decomposition of a complex Hermitian or real symmetric positive-definite matrix ($A = LL^H$).",
+    "signature": "torch.linalg.cholesky(A, *, upper=False, out=None)",
+    "usage_examples": [
+      "L = torch.linalg.cholesky(A)",
+      "L_upper = torch.linalg.cholesky(A, upper=True)"
+    ],
+    "notes": "Supports batches of matrices. When inputs are on a CUDA device, this function synchronizes the device with the CPU. For a version that skips slow error checking and avoids synchronization, use torch.linalg.cholesky_ex()."
+  },
+  {
+    "deprecated_api": "torch.eig",
+    "replacement_api": "torch.linalg.eig",
+    "description": "Computes the eigenvalue decomposition of a square matrix if it exists.",
+    "signature": "torch.linalg.eig(A, *, out=None)",
+    "usage_examples": [
+      "L, V = torch.linalg.eig(A)",
+      "torch.dist(V @ torch.diag(L) @ torch.linalg.inv(V), A)",
+      "L, V = torch.linalg.eig(torch.randn(3, 2, 2))"
+    ],
+    "notes": "Replaces the deprecated torch.eig. The decomposition is defined as $A = V \\text{diag}(\\Lambda) V^{-1}$. Results are always complex-valued, even for real matrices. Gradients are numerically stable only when eigenvalues are distinct. Note that eigenvectors are normalized to have norm 1 and are not unique."
+  },
+  {
+    "deprecated_api": "torch.lu",
+    "replacement_api": "torch.linalg.lu_factor",
+    "description": "Computes a compact representation of the LU factorization with partial pivoting of a matrix.",
+    "signature": "torch.linalg.lu_factor(A, *, bool pivot=True, out=None)",
+    "usage_examples": [
+      "LU, pivots = torch.linalg.lu_factor(A)",
+      "X = torch.linalg.lu_solve(LU, pivots, B)"
+    ],
+    "notes": "Replaces the deprecated torch.lu. This compact representation is intended for use with torch.linalg.lu_solve. Pivot=False is only supported on CUDA. When using CUDA, this function synchronizes the device with the CPU. Gradient computation requires the input matrix to be full-rank."
+  },
+  {
+    "deprecated_api": "torch.lu_solve",
+    "replacement_api": "torch.linalg.lu_solve",
+    "description": "Computes the solution of a square system of linear equations ($AX = B$) given a pre-computed LU decomposition.",
+    "signature": "torch.linalg.lu_solve(LU, pivots, B, *, left=True, adjoint=False, out=None)",
+    "usage_examples": [
+      "X = torch.linalg.lu_solve(LU, pivots, B)",
+      "X = torch.linalg.lu_solve(LU, pivots, B, left=False)",
+      "X = torch.linalg.lu_solve(LU, pivots, B, adjoint=True)"
+    ],
+    "notes": "The LU and pivots arguments should be those returned by torch.linalg.lu_factor. It supports solving for the transpose or conjugate transpose ($A^H X = B$) by setting adjoint=True. It also supports solving for $XA = B$ by setting left=False."
+  },
+  {
+    "deprecated_api": "torch.matrix_rank",
+    "replacement_api": "torch.linalg.matrix_rank",
+    "description": "Computes the numerical rank of a matrix based on the number of singular values (or eigenvalues if hermitian=True) that exceed a specified threshold.",
+    "signature": "torch.linalg.matrix_rank(A, *, atol=None, rtol=None, hermitian=False, out=None)",
+    "usage_examples": [
+      "torch.linalg.matrix_rank(A)",
+      "torch.linalg.matrix_rank(A, hermitian=True)",
+      "torch.linalg.matrix_rank(A, atol=1.0, rtol=0.0)"
+    ],
+    "notes": "The threshold is defined as $\\max(\\text{atol}, \\sigma_1 \\times \\text{rtol})$ where $\\sigma_1$ is the largest singular value. The positional argument 'tol' is deprecated in favor of 'atol' and 'rtol'. When using CUDA, this function synchronizes the device with the CPU."
+  },
+  {
+    "deprecated_api": "torch.nn.functional.upsample",
+    "replacement_api": "torch.nn.functional.interpolate",
+    "description": "Down/up samples the input tensor to either a given size or a given scale_factor.",
+    "signature": "torch.nn.functional.interpolate(input, size=None, scale_factor=None, mode='nearest', align_corners=None, recompute_scale_factor=None, antialias=False)",
+    "usage_examples": [
+      "torch.nn.functional.interpolate(input, size=(H_out, W_out), mode='bilinear')",
+      "torch.nn.functional.interpolate(input, scale_factor=2, mode='nearest')",
+      "torch.nn.functional.interpolate(input, size=size, mode='bicubic', antialias=True)"
+    ],
+    "notes": "Supports temporal (3D), spatial (4D), and volumetric (5D) sampling. The 'nearest-exact' mode matches Scikit-Image and PIL and fixes issues found in the default 'nearest' mode. Note that bicubic interpolation can cause overshoot, potentially producing values outside the $[0, 255]$ range."
+  },
+  {
+    "deprecated_api": "torch.nn.functional.upsample_bilinear",
+    "replacement_api": "torch.nn.functional.interpolate",
+    "description": "Samples the input using bilinear interpolation, typically used for spatial (4D) tensors.",
+    "signature": "torch.nn.functional.interpolate(input, size=None, scale_factor=None, mode='bilinear', align_corners=None, antialias=False)",
+    "usage_examples": [
+      "torch.nn.functional.interpolate(input, size=output_size, mode='bilinear', align_corners=False)",
+      "torch.nn.functional.interpolate(input, scale_factor=2.0, mode='bilinear', antialias=True)"
+    ],
+    "notes": "torch.nn.functional.upsample_bilinear was a specialized alias for interpolate. When migrating, ensure the 'mode' parameter is explicitly set to 'bilinear'. For downsampling that matches Pillow's results, use align_corners=False and antialias=True."
+  },
+  {
+    "deprecated_api": "torch.nn.functional.upsample_nearest",
+    "replacement_api": "torch.nn.functional.interpolate",
+    "description": "Down/up samples the input using nearest neighbor interpolation.",
+    "signature": "torch.nn.functional.interpolate(input, size=None, scale_factor=None, mode='nearest', align_corners=None, recompute_scale_factor=None, antialias=False)",
+    "usage_examples": [
+      "torch.nn.functional.interpolate(input, size=out_size, mode='nearest')",
+      "torch.nn.functional.interpolate(input, scale_factor=2.0, mode='nearest-exact')"
+    ],
+    "notes": "torch.nn.functional.upsample_nearest is a deprecated alias. When migrating, set mode='nearest'. Consider using mode='nearest-exact' to match Scikit-Image and PIL algorithms, which fixes known bugs in the default 'nearest' implementation."
+  },
+  {
+    "deprecated_api": "torch.nn.modules.module.register_module_backward_hook",
+    "replacement_api": "torch.nn.modules.module.register_module_full_backward_hook",
+    "description": "Register a backward hook common to all modules for debugging or profiling.",
+    "signature": "torch.nn.modules.module.register_module_full_backward_hook(hook)",
+    "usage_examples": [
+      "handle = torch.nn.modules.module.register_module_full_backward_hook(my_hook)",
+      "handle.remove()"
+    ],
+    "notes": "Adds global state to the nn.module module. Hooks registered this way behave like those from register_full_backward_hook() but are called earlier. Recommended only for debugging and profiling purposes."
+  },
+  {
+    "deprecated_api": "torch.nn.utils.stateless.functional_call",
+    "replacement_api": "torch.func.functional_call",
+    "description": "Performs a functional call on a module by replacing its parameters and buffers with provided tensors.",
+    "signature": "torch.func.functional_call(module, parameter_and_buffer_dicts, args=None, kwargs=None, *, tie_weights=True, strict=False)",
+    "usage_examples": [
+      "output = functional_call(model, params_dict, x)",
+      "grad_weights = grad(compute_loss)(dict(model.named_parameters()), x, t)",
+      "functional_call(mod, params, args, tie_weights=False)"
+    ],
+    "notes": "Replaces the version in torch.nn.utils.stateless. It is highly useful for gradient transformations. If tie_weights=True, it respects originally tied parameters. Note that in-place operations in the module will reflect in the input parameter dictionary."
+  },
+  {
+    "deprecated_api": "torch.nn.utils.weight_norm",
+    "replacement_api": "torch.nn.utils.parametrizations.weight_norm",
+    "description": "Apply weight normalization to a parameter in a module, decoupling the magnitude of a weight tensor from its direction.",
+    "signature": "torch.nn.utils.parametrizations.weight_norm(module, name='weight', dim=0)",
+    "usage_examples": [
+      "from torch.nn.utils.parametrizations import weight_norm",
+      "m = weight_norm(nn.Linear(20, 40), name='weight')",
+      "m = weight_norm(nn.Conv2d(16, 33, 3), dim=0)"
+    ],
+    "notes": "This new implementation uses the parametrization framework. It replaces the parameter specified by 'name' with two new parameters (one for magnitude, one for direction). By default (dim=0), the norm is computed per output channel; use dim=None for the entire tensor."
+  },
+  {
+    "deprecated_api": "torch.norm",
+    "replacement_api": "torch.linalg.norm",
+    "description": "Computes a vector or matrix norm.",
+    "signature": "torch.linalg.norm(A, ord=None, dim=None, keepdim=False, *, out=None, dtype=None)",
+    "usage_examples": [
+      "torch.linalg.norm(A)",
+      "torch.linalg.norm(A, ord='fro')",
+      "torch.linalg.norm(A, ord=1, dim=(0, 1))",
+      "torch.linalg.norm(x, ord=2, dim=0)"
+    ],
+    "notes": "Replaces the deprecated torch.norm. Behavior is determined by 'dim': an int computes a vector norm, while a 2-tuple computes a matrix norm. For more specialized use cases, torch.linalg.vector_norm and torch.linalg.matrix_norm are often clearer alternatives."
+  },
+  {
+    "deprecated_api": "torch.qr",
+    "replacement_api": "torch.linalg.qr",
+    "description": "Computes the QR decomposition of a matrix ($A = QR$).",
+    "signature": "torch.linalg.qr(A, mode='reduced', *, out=None)",
+    "usage_examples": [
+      "Q, R = torch.linalg.qr(A)",
+      "Q, R = torch.linalg.qr(A, mode='complete')",
+      "_, R = torch.linalg.qr(A, mode='r')"
+    ],
+    "notes": "Returns a named tuple (Q, R). The 'mode' parameter controls whether to return reduced, complete, or only the R part of the decomposition. The decomposition is unique only up to the sign of the diagonal of R. Gradient support varies by mode and matrix shape."
+  },
+  {
+    "deprecated_api": "torch.solve",
+    "replacement_api": "torch.linalg.solve",
+    "description": "Computes the solution of a square system of linear equations with a unique solution ($AX = B$).",
+    "signature": "torch.linalg.solve(A, B, *, left=True, out=None)",
+    "usage_examples": [
+      "x = torch.linalg.solve(A, b)",
+      "X = torch.linalg.solve(A, B)",
+      "X = torch.linalg.solve(A, B, left=False)"
+    ],
+    "notes": "Replaces the deprecated torch.solve. It is faster and more numerically stable than computing A.inverse() @ B. It assumes the matrix A is invertible. On CUDA devices, this function synchronizes the device with the CPU; use torch.linalg.solve_ex() to avoid synchronization."
+  },
+  {
+    "deprecated_api": "torch.svd",
+    "replacement_api": "torch.linalg.svd",
+    "description": "Computes the singular value decomposition (SVD) of a matrix ($A = U \\text{diag}(S) V^H$).",
+    "signature": "torch.linalg.svd(A, full_matrices=True, *, driver=None, out=None)",
+    "usage_examples": [
+      "U, S, Vh = torch.linalg.svd(A)",
+      "U, S, Vh = torch.linalg.svd(A, full_matrices=False)",
+      "U, S, Vh = torch.linalg.svd(A, driver='gesvdj')"
+    ],
+    "notes": "Returns a named tuple (U, S, Vh). Singular values are returned in descending order. Unlike NumPy, it doesn't support a compute_uv argument; use torch.linalg.svdvals() if you only need the singular values. Gradients are numerically stable only when there are no repeated singular values."
+  },
+  {
+    "deprecated_api": "torch.symeig",
+    "replacement_api": "torch.linalg.eigh",
+    "description": "Computes the eigenvalue decomposition of a complex Hermitian or real symmetric matrix.",
+    "signature": "torch.linalg.eigh(A, UPLO='L', *, out=None)",
+    "usage_examples": [
+      "L, Q = torch.linalg.eigh(A)",
+      "L, Q = torch.linalg.eigh(A, UPLO='U')"
+    ],
+    "notes": "Replaces the deprecated torch.symeig. The eigenvalues are always real and returned in ascending order. A is assumed to be Hermitian/symmetric, using only the triangular part specified by UPLO. For gradient stability when only eigenvalues are needed, use torch.linalg.eigvalsh() instead."
+  },
+  {
+    "deprecated_api": "torch.lstsq",
+    "replacement_api": "torch.linalg.lstsq",
+    "description": "Computes the least-squares solution to a linear matrix equation ($AX = B$).",
+    "signature": "torch.linalg.lstsq(A, B, rcond=None, *, driver=None, out=None)",
+    "usage_examples": [
+      "X = torch.linalg.lstsq(A, B).solution",
+      "solution, residuals, rank, singular_values = torch.linalg.lstsq(A, B)",
+      "torch.linalg.lstsq(A, B, rcond=1e-3, driver='gelss')"
+    ],
+    "notes": "Replaces the deprecated torch.lstsq. Note the critical change in argument order: the new API uses (A, B) while the old one used (B, A). The return type is now a namedtuple containing solution, residuals, rank, and singular_values. The 'rcond' parameter handles the cut-off for small singular values and its default behavior varies by driver."
+  },
+  {
+    "deprecated_api": "torch.testing.assert_allclose",
+    "replacement_api": "torch.testing.assert_close",
+    "description": "Asserts that actual and expected are close based on absolute and relative tolerances.",
+    "signature": "torch.testing.assert_close(actual, expected, *, allow_subclasses=True, rtol=None, atol=None, equal_nan=False, check_device=True, check_dtype=True, check_layout=True, check_stride=False, msg=None)",
+    "usage_examples": [
+      "torch.testing.assert_close(actual, expected)",
+      "torch.testing.assert_close(actual, expected, rtol=1e-4, atol=1e-4)",
+      "torch.testing.assert_close(actual, expected, check_dtype=False)"
+    ],
+    "notes": "Replaces the deprecated torch.testing.assert_allclose. By default, it performs strict checks on device, dtype, and layout. It supports Tensors, scalars, and nested Python collections (Sequences and Mappings). If checking Python scalars of different types, check_dtype=False is required."
+  },
+  {
+    "deprecated_api": "torch.triangular_solve",
+    "replacement_api": "torch.linalg.solve_triangular",
+    "description": "Computes the solution of a triangular system of linear equations ($AX = B$) with a unique solution.",
+    "signature": "torch.linalg.solve_triangular(A, B, *, upper, left=True, unitriangular=False, out=None)",
+    "usage_examples": [
+      "X = torch.linalg.solve_triangular(A, B, upper=True)",
+      "X = torch.linalg.solve_triangular(A, B, upper=False, unitriangular=True)",
+      "torch.linalg.solve_triangular(A, B, upper=True, out=B)"
+    ],
+    "notes": "Replaces the deprecated torch.triangular_solve. The 'upper' parameter is required to specify if the matrix is upper or lower triangular. It only accesses the half of the matrix specified. Setting unitriangular=True treats the diagonal as 1s. Supports in-place computation by passing B as the 'out' parameter."
+  }, 
+  {
+    "deprecated_api": "transformers.BeitFeatureExtractor",
+    "replacement_api": "transformers.BeitImageProcessor",
+    "description": "Constructs a BEiT image processor for preprocessing images and segmentation maps.",
+    "signature": "class transformers.BeitImageProcessor(do_reduce_labels=False, **kwargs)",
+    "usage_examples": [
+      "processor = BeitImageProcessor.from_pretrained('microsoft/beit-base-patch16-224')",
+      "inputs = processor(images, segmentation_maps=maps, return_tensors='pt')",
+      "maps = processor.post_process_semantic_segmentation(outputs, target_sizes=sizes)"
+    ],
+    "notes": "FeatureExtractors in Transformers were renamed to ImageProcessors for consistency. Includes the 'do_reduce_labels' parameter, typically used for ADE20k where background (0) is reduced to 255. Returns a BatchFeature object."
+  },
+  {
+    "deprecated_api": "transformers.ConditionalDetrFeatureExtractor",
+    "replacement_api": "transformers.ConditionalDetrImageProcessor",
+    "description": "Constructs a Conditional DETR image processor to handle image preprocessing and annotation transformation.",
+    "signature": "class transformers.ConditionalDetrImageProcessor(format='coco_detection', do_convert_annotations=True, **kwargs)",
+    "usage_examples": [
+      "processor = ConditionalDetrImageProcessor()",
+      "inputs = processor(images, annotations=annotations, return_tensors='pt')",
+      "inputs = processor(images, return_segmentation_masks=True)"
+    ],
+    "notes": "Supports 'coco_detection' and 'coco_panoptic' formats. By default, converts bounding boxes to (center_x, center_y, width, height) format in the range [0, 1] as expected by the Conditional DETR model."
+  },
+  {
+    "deprecated_api": "transformers.ConvNextFeatureExtractor",
+    "replacement_api": "transformers.ConvNextImageProcessor",
+    "description": "Constructs a ConvNeXT image processor for model-specific image preprocessing.",
+    "signature": "class transformers.ConvNextImageProcessor(crop_pct=0.875, **kwargs)",
+    "usage_examples": [
+      "processor = ConvNextImageProcessor.from_pretrained('facebook/convnext-tiny-224')",
+      "inputs = processor(images, return_tensors='pt')"
+    ],
+    "notes": "Includes 'crop_pct' which only impacts preprocessing if the image size is less than 384. Expects pixel values ranging from 0 to 255; otherwise, 'do_rescale' should be set to False."
+  },
+  {
+    "deprecated_api": "transformers.DeformableDetrFeatureExtractor",
+    "replacement_api": "transformers.DeformableDetrImageProcessor",
+    "description": "Constructs a DeformableDetrImageProcessor for preprocessing images and object detection annotations using deformable attention mechanisms.",
+    "signature": "class transformers.DeformableDetrImageProcessor(format='coco_detection', do_convert_annotations=True, **kwargs)",
+    "usage_examples": [
+      "processor = DeformableDetrImageProcessor()",
+      "inputs = processor(images, annotations=annotations, return_tensors='pt')",
+      "results = processor.post_process_object_detection(outputs, threshold=0.5, target_sizes=target_sizes)"
+    ],
+    "notes": "By default, converts bounding boxes to (center_x, center_y, width, height) format in the range [0, 1]. The post_process_object_detection method converts raw model outputs into final bounding boxes in (top_left_x, top_left_y, bottom_right_x, bottom_right_y) format."
+  },
+  {
+    "deprecated_api": "transformers.DetrFeatureExtractor",
+    "replacement_api": "transformers.DetrImageProcessor",
+    "description": "Constructs a DetrImageProcessor image processor for preprocessing images and transforming annotations for detection or panoptic segmentation.",
+    "signature": "class transformers.DetrImageProcessor(format='coco_detection', do_convert_annotations=True, **kwargs)",
+    "usage_examples": [
+      "processor = DetrImageProcessor.from_pretrained('facebook/detr-resnet-50')",
+      "inputs = processor(images, return_tensors='pt')",
+      "results = processor.post_process_object_detection(outputs, threshold=0.5, target_sizes=target_sizes)"
+    ],
+    "notes": "Renamed for consistency across the library. Includes post-processing methods for both object detection and semantic segmentation. Note that post-processing methods currently only support PyTorch."
+  },
+  {
+    "deprecated_api": "transformers.DonutFeatureExtractor",
+    "replacement_api": "transformers.DonutImageProcessor",
+    "description": "Constructs a DonutImageProcessor for Document Understanding Transformer (Donut) image preprocessing.",
+    "signature": "class transformers.DonutImageProcessor(do_thumbnail=None, do_align_long_axis=None, **kwargs)",
+    "usage_examples": [
+      "processor = DonutImageProcessor.from_pretrained('naver-clova-ix/donut-base')",
+      "inputs = processor(images, return_tensors='pt')",
+      "inputs = processor(images, do_align_long_axis=True)"
+    ],
+    "notes": "Features model-specific preprocessing options such as 'do_thumbnail' for resizing and 'do_align_long_axis', which rotates the image by 90 degrees to align its long axis with the long axis of the target size."
+  },
+  {
+    "deprecated_api": "transformers.GLPNFeatureExtractor",
+    "replacement_api": "transformers.GLPNImageProcessor",
+    "description": "Constructs a GLPN image processor for depth estimation preprocessing.",
+    "signature": "class transformers.GLPNImageProcessor(size_divisor=32, **kwargs)",
+    "usage_examples": [
+      "processor = GLPNImageProcessor.from_pretrained('vincentcornee/glpn-kitti')",
+      "inputs = processor(images, return_tensors='pt')"
+    ],
+    "notes": "When do_resize is True, images are resized so their height and width are rounded down to the closest multiple of 'size_divisor' (defaults to 32)."
+  },
+  {
+    "deprecated_api": "transformers.HubertForCTC.freeze_feature_extractor",
+    "replacement_api": "transformers.HubertForCTC.freeze_feature_encoder",
+    "description": "Disables the gradient computation for the feature encoder so that its parameters will not be updated during training.",
+    "signature": "HubertForCTC.freeze_feature_encoder()",
+    "usage_examples": [
+      "model = HubertForCTC.from_pretrained('facebook/hubert-large-ls960-ft')",
+      "model.freeze_feature_encoder()"
+    ],
+    "notes": "Renamed for architectural clarity. This method ensures the weight parameters of the feature encoder remain fixed while fine-tuning the CTC head."
+  },
+  {
+    "deprecated_api": "transformers.LayoutLMv2FeatureExtractor",
+    "replacement_api": "transformers.LayoutLMv2ImageProcessor",
+    "description": "Constructs a LayoutLMv2 image processor with optional OCR capabilities.",
+    "signature": "class transformers.LayoutLMv2ImageProcessor(apply_ocr=True, ocr_lang=None, tesseract_config=None, **kwargs)",
+    "usage_examples": [
+      "processor = LayoutLMv2ImageProcessor.from_pretrained('microsoft/layoutlmv2-base-uncased')",
+      "inputs = processor(images, apply_ocr=True)"
+    ],
+    "notes": "Integrates with the Tesseract OCR engine to extract words and normalized bounding boxes from document images. Custom Tesseract configurations can be passed via 'tesseract_config'."
+  },
+  {
+    "deprecated_api": "transformers.MaskFormerFeatureExtractor",
+    "replacement_api": "transformers.MaskFormerImageProcessor",
+    "description": "Constructs a MaskFormerImageProcessor for image and segmentation map preprocessing, including padding and label reduction.",
+    "signature": "class transformers.MaskFormerImageProcessor(pad_size=None, ignore_index=None, do_reduce_labels=False, num_labels=None, size_divisor=32, **kwargs)",
+    "usage_examples": [
+      "processor = MaskFormerImageProcessor.from_pretrained('facebook/maskformer-swin-tiny-ade')",
+      "inputs = processor(images, segmentation_maps=maps, return_tensors='pt')",
+      "inputs = processor(images, ignore_index=255, do_reduce_labels=True)"
+    ],
+    "notes": "Includes 'ignore_index' for assigning specific background labels and 'do_reduce_labels' for datasets like ADE20k where background is 0. 'size_divisor' defaults to 32 to ensure image dimensions are compatible with Swin Transformer backbones."
+  },
+  {
+    "deprecated_api": "transformers.MobileNetV1FeatureExtractor",
+    "replacement_api": "transformers.MobileNetV1ImageProcessor",
+    "description": "Constructs a MobileNetV1 image processor for model-specific image preprocessing.",
+    "signature": "class transformers.MobileNetV1ImageProcessor(**kwargs)",
+    "usage_examples": [
+      "processor = MobileNetV1ImageProcessor.from_pretrained('google/mobilenet_v1_1.0_224')",
+      "inputs = processor(images, return_tensors='pt')"
+    ],
+    "notes": "Standard image processor for MobileNetV1 models. It expects pixel values in the range 0-255. If the input images already have values between 0 and 1, 'do_rescale' should be set to False."
+  },
+  {
+    "deprecated_api": "transformers.MobileViTFeatureExtractor",
+    "replacement_api": "transformers.MobileViTImageProcessor",
+    "description": "Constructs a MobileViTImageProcessor for preprocessing images and segmentation maps, featuring channel order flipping.",
+    "signature": "class transformers.MobileViTImageProcessor(do_flip_channel_order=False, do_reduce_labels=False, **kwargs)",
+    "usage_examples": [
+      "processor = MobileViTImageProcessor.from_pretrained('apple/mobilevit-small')",
+      "inputs = processor(images, return_tensors='pt')",
+      "inputs = processor(images, do_flip_channel_order=True)"
+    ],
+    "notes": "Renamed for consistency. Includes 'do_flip_channel_order' for RGB to BGR conversion and 'do_reduce_labels' for ADE20k-style datasets where the background label is moved to 255."
+  },
+  {
+    "deprecated_api": "transformers.TFWav2Vec2ForCTC.freeze_feature_extractor",
+    "replacement_api": "transformers.TFWav2Vec2ForCTC.freeze_feature_encoder",
+    "description": "Disables gradient computation for the feature encoder in the TensorFlow Wav2Vec2 model to prevent parameter updates during training.",
+    "signature": "TFWav2Vec2ForCTC.freeze_feature_encoder()",
+    "usage_examples": [
+      "model = TFWav2Vec2ForCTC.from_pretrained('facebook/wav2vec2-base-960h')",
+      "model.freeze_feature_encoder()"
+    ],
+    "notes": "Commonly used during fine-tuning to keep the pre-trained acoustic features extracted by the convolutional layers fixed while only training the Transformer blocks and CTC head."
+  },
+  {
+    "deprecated_api": "transformers.UniSpeechForCTC.freeze_feature_extractor",
+    "replacement_api": "transformers.UniSpeechForCTC.freeze_feature_encoder",
+    "description": "Disables the gradient computation for the feature encoder so that its parameters will not be updated during training.",
+    "signature": "UniSpeechForCTC.freeze_feature_encoder()",
+    "usage_examples": [
+      "model = UniSpeechForCTC.from_pretrained('microsoft/unispeech-1300-ft-ls960')",
+      "model.freeze_feature_encoder()"
+    ],
+    "notes": "Renamed for consistency across the Transformers library's audio models. This method ensures that the weight parameters of the initial convolutional feature extraction layers remain fixed while fine-tuning the CTC head."
+  },
+  {
+    "deprecated_api": "transformers.UniSpeechSatForCTC.freeze_feature_extractor",
+    "replacement_api": "transformers.UniSpeechSatForCTC.freeze_feature_encoder",
+    "description": "Disables the gradient computation for the feature encoder so that its parameters will not be updated during training.",
+    "signature": "UniSpeechSatForCTC.freeze_feature_encoder()",
+    "usage_examples": [
+      "model = UniSpeechSatForCTC.from_pretrained('microsoft/unispeech-sat-base-100h-ft')",
+      "model.freeze_feature_encoder()"
+    ],
+    "notes": "Aligns the UniSpeechSat API with other speech-to-text models. Freezing the feature encoder is a standard practice when the pre-trained acoustic features are sufficient for the target task, reducing memory usage and preventing overfitting."
+  },
+  {
+    "deprecated_api": "transformers.ViTFeatureExtractor",
+    "replacement_api": "transformers.ViTImageProcessor",
+    "description": "Constructs a ViT image processor for Vision Transformer (ViT) image preprocessing.",
+    "signature": "class transformers.ViTImageProcessor(**kwargs)",
+    "usage_examples": [
+      "processor = ViTImageProcessor.from_pretrained('google/vit-base-patch16-224')",
+      "inputs = processor(images, return_tensors='pt')",
+      "inputs = processor(images, do_rescale=False)"
+    ],
+    "notes": "Renamed from FeatureExtractor to ImageProcessor as part of a library-wide effort to clarify the role of vision-based preprocessing. It handles tasks like resizing, rescaling, and normalization. By default, it expects pixel values in the range 0-255."
+  },
+  {
+    "deprecated_api": "transformers.VideoMAEFeatureExtractor",
+    "replacement_api": "transformers.VideoMAEImageProcessor",
+    "description": "Constructs a VideoMAE image processor for preprocessing video frames.",
+    "signature": "class transformers.VideoMAEImageProcessor(**kwargs)",
+    "usage_examples": [
+      "processor = VideoMAEImageProcessor.from_pretrained('MCG-NJU/videomae-base')",
+      "inputs = processor(list_of_videos, return_tensors='pt')"
+    ],
+    "notes": "Renamed as part of the library-wide transition from FeatureExtractors to ImageProcessors. It handles the temporal and spatial preprocessing required for Video Masked Autoencoders."
+  },
+  {
+    "deprecated_api": "transformers.Wav2Vec2ForCTC.freeze_feature_extractor",
+    "replacement_api": "transformers.Wav2Vec2ForCTC.freeze_feature_encoder",
+    "description": "Disables the gradient computation for the feature encoder so that its parameters will not be updated during training.",
+    "signature": "Wav2Vec2ForCTC.freeze_feature_encoder()",
+    "usage_examples": [
+      "model = Wav2Vec2ForCTC.from_pretrained('facebook/wav2vec2-base-960h')",
+      "model.freeze_feature_encoder()"
+    ],
+    "notes": "Standardizes the method name across speech models. Freezing the feature encoder (the initial convolutional layers) is a common strategy when fine-tuning Wav2Vec2 to preserve low-level acoustic features."
+  },
+  {
+    "deprecated_api": "transformers.WavLMForCTC.freeze_feature_extractor",
+    "replacement_api": "transformers.WavLMForCTC.freeze_feature_encoder",
+    "description": "Disables the gradient computation for the feature encoder so that its parameters will not be updated during training.",
+    "signature": "WavLMForCTC.freeze_feature_encoder()",
+    "usage_examples": [
+      "model = WavLMForCTC.from_pretrained('microsoft/wavlm-base-plus-ft')",
+      "model.freeze_feature_encoder()"
+    ],
+    "notes": "Consistent with Wav2Vec2 and Hubert. This method ensures that the weight parameters of the convolutional feature extraction layers remain fixed while training the CTC head."
+  },
+  {
+    "deprecated_api": "transformers.YolosFeatureExtractor",
+    "replacement_api": "transformers.YolosImageProcessor",
+    "description": "Constructs a YolosImageProcessor for preprocessing images and transforming object detection annotations.",
+    "signature": "class transformers.YolosImageProcessor(format='coco_detection', do_convert_annotations=True, **kwargs)",
+    "usage_examples": [
+      "processor = YolosImageProcessor.from_pretrained('hustvl/yolos-small')",
+      "inputs = processor(images, annotations=annotations, return_tensors='pt')"
+    ],
+    "notes": "Renamed for consistency. By default, it converts bounding boxes to the format (center_x, center_y, width, height) in the range [0, 1] to match the expectations of the YOLOS model."
+  },
+  {
+    "deprecated_api": "tensorflow.Print",
+    "replacement_api": "tensorflow.print",
+    "description": "A TensorFlow operator that prints the specified inputs to a desired output stream or logging level.",
+    "signature": "tf.print(*inputs, **kwargs)",
+    "usage_examples": [
+      "tf.print(tensor)",
+      "tf.print('tensors:', tensor, {2: tensor * 2}, output_stream=sys.stdout)",
+      "tf.print(tensor_a, tensor_b, sep=',')"
+    ],
+    "notes": "Unlike the deprecated tf.Print (which was a functional node in the graph that required being part of the data flow), tf.print is a dedicated operator with better performance in tf.function and tf.data. Tensors are summarized by showing only the first and last elements of each dimension."
+  },
+  {
+    "deprecated_api": "tensorflow.all_variables",
+    "replacement_api": "tensorflow.global_variables",
+    "description": "Returns the contents of the GraphKeys.GLOBAL_VARIABLES collection, representing variables shared across machines in a distributed environment.",
+    "signature": "tf.compat.v1.global_variables(scope=None)",
+    "usage_examples": [
+      "tf.compat.v1.global_variables()",
+      "tf.compat.v1.global_variables(scope='my_model')"
+    ],
+    "notes": "tensorflow.all_variables was an early alias for global_variables and is now deprecated. These variables are automatically added by the Variable() constructor or get_variable(). For local (non-shared) variables, use tf.compat.v1.local_variables."
+  },
+  {
+    "deprecated_api": "tensorflow.arg_max",
+    "replacement_api": "tensorflow.math.argmax",
+    "description": "Returns the index with the largest value across axes of a tensor.",
+    "signature": "tf.math.argmax(input, axis=None, output_type=tf.dtypes.int64, name=None)",
+    "usage_examples": [
+      "tf.math.argmax(A)",
+      "tf.math.argmax(B, axis=0)",
+      "tf.math.argmax(B, axis=1, output_type=tf.int32)"
+    ],
+    "notes": "Renamed for consistency within the tf.math module. In case of ties (identity), it returns the smallest index. The axis defaults to 0 if not specified."
+  },
+  {
+    "deprecated_api": "tensorflow.arg_min",
+    "replacement_api": "tensorflow.math.argmin",
+    "description": "Returns the index with the smallest value across axes of a tensor.",
+    "signature": "tf.math.argmin(input, axis=None, output_type=tf.dtypes.int64, name=None)",
+    "usage_examples": [
+      "tf.math.argmin(A)",
+      "tf.math.argmin(B, axis=0)",
+      "tf.math.argmin(B, axis=1, output_type=tf.int32)"
+    ],
+    "notes": "Renamed for consistency within the tf.math module. In case of ties, it returns the smallest index. The 'axis' parameter describes which axis of the input Tensor to reduce across."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.Print",
+    "replacement_api": "tensorflow.print",
+    "description": "A TensorFlow operator that prints the specified inputs to a desired output stream or logging level.",
+    "signature": "tf.print(*inputs, **kwargs)",
+    "usage_examples": [
+      "tf.print(tensor)",
+      "tf.print('tensors:', tensor, {2: tensor * 2}, output_stream=sys.stdout)",
+      "tf.print(tensor_a, tensor_b, sep=',')"
+    ],
+    "notes": "Replaces the legacy tf.compat.v1.Print. It offers better performance with tf.function and the tf.data API. In Jupyter notebooks, it prints to the cell outputs rather than the kernel console logs."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.all_variables",
+    "replacement_api": "tensorflow.global_variables",
+    "description": "Returns global variables shared across machines in a distributed environment.",
+    "signature": "tf.compat.v1.global_variables(scope=None)",
+    "usage_examples": [
+      "tf.compat.v1.global_variables()",
+      "tf.compat.v1.global_variables(scope='model_vars')"
+    ],
+    "notes": "Global variables are automatically added to GraphKeys.GLOBAL_VARIABLES. Note that graph collections are deprecated in TF2; the modern alternative is to use tf.Module and its 'variables' attribute."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.arg_max",
+    "replacement_api": "tensorflow.math.argmax",
+    "description": "Returns the index with the largest value across axes of a tensor.",
+    "signature": "tf.math.argmax(input, axis=None, output_type=tf.dtypes.int64, name=None)",
+    "usage_examples": [
+      "tf.math.argmax(A)",
+      "tf.math.argmax(B, axis=0)",
+      "tf.math.argmax(B, axis=1)"
+    ],
+    "notes": "Renamed to math.argmax. It returns the smallest index in case of ties. The output type can be specified as either tf.int32 or tf.int64 (default)."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.arg_min",
+    "replacement_api": "tensorflow.math.argmin",
+    "description": "Returns the index with the smallest value across axes of a tensor.",
+    "signature": "tf.math.argmin(input, axis=None, output_type=tf.dtypes.int64, name=None)",
+    "usage_examples": [
+      "tf.math.argmin(input=a)",
+      "tf.math.argmin(B, axis=0)",
+      "tf.math.argmin(B, axis=1, output_type=tf.int32)"
+    ],
+    "notes": "Renamed for consistency. In case of ties, it returns the smallest index. Note that in TF2, this is typically accessed via tf.math.argmin rather than the compat.v1 namespace."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.div",
+    "replacement_api": "tensorflow.divide",
+    "description": "Computes Python 3 style (floating-point) division of x by y.",
+    "signature": "tf.math.divide(x, y, name=None)",
+    "usage_examples": [
+      "tf.divide(x, y)",
+      "tf.math.divide(tensor_a, tensor_b)"
+    ],
+    "notes": "Unlike the old tf.div which performed integer division on integer inputs, tf.divide always performs floating-point division to match Python 3 behavior. For floor division, use tf.math.floordiv."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.initialize_all_variables",
+    "replacement_api": "tensorflow.compat.v1.global_variables_initializer",
+    "description": "Returns an Op that initializes global variables in the current graph.",
+    "signature": "tf.compat.v1.global_variables_initializer()",
+    "usage_examples": [
+      "sess.run(tf.compat.v1.global_variables_initializer())"
+    ],
+    "notes": "This was a legacy alias for global_variables_initializer. In TensorFlow 2, this is effectively obsolete because variables are initialized immediately upon creation (eager execution), and graph collections are no longer used."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.initializers.uniform_unit_scaling",
+    "replacement_api": "tensorflow.initializers.variance_scaling",
+    "description": "Initializer that adapts its scale to the shape of weights tensors.",
+    "signature": "tf.keras.initializers.VarianceScaling(scale=1.0, mode='fan_in', distribution='uniform')",
+    "usage_examples": [
+      "initializer = tf.initializers.variance_scaling()",
+      "layer = tf.keras.layers.Dense(units=64, kernel_initializer='variance_scaling')"
+    ],
+    "notes": "Uniform unit scaling was replaced by the more flexible VarianceScaling initializer in TF2. Note that your provided documentation snippet for this API actually contained text for the variable initializer; the correct mapping for weight scaling is VarianceScaling."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.metrics.auc",
+    "replacement_api": "tensorflow.keras.metrics.AUC",
+    "description": "Approximates the Area Under the Curve (AUC) for either the Receiver Operating Characteristic (ROC) or Precision-Recall (PR) curves.",
+    "signature": "tf.keras.metrics.AUC(num_thresholds=200, curve='ROC', summation_method='interpolation', name=None, dtype=None, thresholds=None, multi_label=False, num_labels=None, label_weights=None, from_logits=False)",
+    "usage_examples": [
+      "m = tf.keras.metrics.AUC(num_thresholds=100)",
+      "m.update_state([0, 0, 1, 1], [0, 0.5, 0.3, 0.9])",
+      "print('Final AUC:', m.result().numpy())"
+    ],
+    "notes": "Approximates AUC using a Riemann sum. The quality of approximation is highly dependent on the 'num_thresholds' parameter. For PR curves, it uses the interpolation method described by Davis & Goadrich. 'from_logits' should be set to True if the model predictions are not already normalized to [0, 1]."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.mixed_precision.DynamicLossScale",
+    "replacement_api": "tensorflow.keras.mixed_precision.LossScaleOptimizer",
+    "description": "An optimizer wrapper that dynamically scales the loss to prevent numeric underflow during float16 training.",
+    "signature": "tf.keras.mixed_precision.LossScaleOptimizer(inner_optimizer, initial_scale=(2.0 ** 15), dynamic_growth_steps=2000, **kwargs)",
+    "usage_examples": [
+      "base_opt = tf.keras.optimizers.Adam(learning_rate=1e-3)",
+      "opt = tf.keras.mixed_precision.LossScaleOptimizer(base_opt)",
+      "opt.minimize(loss, var_list)"
+    ],
+    "notes": "In TensorFlow 2, loss scaling is handled by wrapping the optimizer rather than as a standalone object. If a non-finite gradient (NaN/Inf) is encountered, the loss scale is halved and the step is skipped. It doubles the scale after 'dynamic_growth_steps' of successful steps."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.mixed_precision.FixedLossScale",
+    "replacement_api": "tensorflow.keras.mixed_precision.LossScaleOptimizer",
+    "description": "Wraps an optimizer to apply loss scaling; in the case of a fixed scale, the dynamic update logic is typically bypassed or configured with a static value.",
+    "signature": "tf.keras.mixed_precision.LossScaleOptimizer(inner_optimizer, initial_scale=scale_value, dynamic=False)",
+    "usage_examples": [
+      "base_opt = tf.keras.optimizers.SGD()",
+      "opt = tf.keras.mixed_precision.LossScaleOptimizer(base_opt, initial_scale=512.0)"
+    ],
+    "notes": "While LossScaleOptimizer is designed for dynamic scaling by default, it serves as the architectural replacement for the FixedLossScale logic in v1. In modern Keras, loss scaling is generally preferred to be dynamic to avoid manual tuning."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.mixed_precision.experimental.DynamicLossScale",
+    "replacement_api": "tensorflow.keras.mixed_precision.LossScaleOptimizer",
+    "description": "The stable Keras implementation of dynamic loss scaling for mixed precision training.",
+    "signature": "tf.keras.mixed_precision.LossScaleOptimizer(inner_optimizer, **kwargs)",
+    "usage_examples": [
+      "opt = tf.keras.mixed_precision.LossScaleOptimizer(tf.keras.optimizers.RMSprop())"
+    ],
+    "notes": "Experimental mixed precision APIs from v1 have been consolidated into the 'tf.keras.mixed_precision' module. This replacement provides better integration with Keras layers and 'Model.fit'."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.mixed_precision.experimental.FixedLossScale",
+    "replacement_api": "tensorflow.keras.mixed_precision.LossScaleOptimizer",
+    "description": "Standard Keras optimizer wrapper for applying a fixed loss scale factor to gradients.",
+    "signature": "tf.keras.mixed_precision.LossScaleOptimizer(inner_optimizer, initial_scale=scale, dynamic=False)",
+    "usage_examples": [
+      "opt = tf.keras.mixed_precision.LossScaleOptimizer(base_opt, initial_scale=1024.0)"
+    ],
+    "notes": "Replaces the experimental v1 fixed scale implementation. Note that using a fixed scale requires careful selection to avoid either underflow or overflow, which is why dynamic scaling is now the default."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.multinomial",
+    "replacement_api": "tensorflow.random.categorical",
+    "description": "Draws samples from a categorical distribution using unnormalized log-probabilities (logits).",
+    "signature": "tf.random.categorical(logits, num_samples, dtype=None, seed=None, name=None)",
+    "usage_examples": [
+      "logits = tf.math.log([[0.5, 0.5]])",
+      "samples = tf.random.categorical(logits, 5)"
+    ],
+    "notes": "Renamed to categorical to better reflect that it samples from a categorical distribution rather than a multinomial one. It expects a 2-D input of shape [batch_size, num_classes]."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.random.multinomial",
+    "replacement_api": "tensorflow.random.categorical",
+    "description": "Draws samples from a categorical distribution.",
+    "signature": "tf.random.categorical(logits, num_samples, dtype=None, seed=None, name=None)",
+    "usage_examples": [
+      "samples = tf.random.categorical(tf.constant([[1.0, 2.0, 3.0]]), 1)"
+    ],
+    "notes": "This is a direct alias for the categorical sampling logic. The output type defaults to int64, but can be set to int32 via the 'dtype' parameter."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.saved_model.load",
+    "replacement_api": "tensorflow.saved_model.load",
+    "description": "Loads a SavedModel from the specified directory.",
+    "signature": "tf.saved_model.load(export_dir, tags=None, options=None)",
+    "usage_examples": [
+      "model = tf.saved_model.load(export_dir, tags=['serve'])"
+    ],
+    "notes": "The v1 version was session-based and is incompatible with eager execution. The v2 replacement returns a trackable object that encapsulates the model's variables and functions, making it compatible with tf.function and modern TF2 workflows."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.saved_model.loader.load",
+    "replacement_api": "tensorflow.saved_model.load",
+    "description": "Loads a SavedModel from a specified directory as an object.",
+    "signature": "tf.saved_model.load(export_dir, tags=None, options=None)",
+    "usage_examples": [
+      "imported = tf.saved_model.load(export_dir)"
+    ],
+    "notes": "Replaces the v1 loader API. It no longer requires a 'tf.compat.v1.Session' or 'import_scope'. Variables are automatically associated with the loaded object, and function names are deduped."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.sparse_to_dense",
+    "replacement_api": "tensorflow.sparse.to_dense",
+    "description": "Converts a SparseTensor into a dense tensor.",
+    "signature": "tf.sparse.to_dense(sp_input, default_value=None, validate_indices=True, name=None)",
+    "usage_examples": [
+      "sp = tf.sparse.SparseTensor(indices=[[0, 1]], values=[7], dense_shape=[3, 5])",
+      "dense = tf.sparse.to_dense(sp, default_value=0)"
+    ],
+    "notes": "The replacement API expects a single SparseTensor object. Unspecified indices in the output dense tensor are filled with 'default_value' (which defaults to zero). Indices must be sorted and unique if 'validate_indices' is True."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.substr",
+    "replacement_api": "tensorflow.strings.substr",
+    "description": "Returns substrings from a Tensor of strings based on specified start positions and lengths.",
+    "signature": "tf.strings.substr(input, pos, len, name=None, unit='BYTE')",
+    "usage_examples": [
+      "tf.strings.substr(input=[b'Hello', b'World'], pos=1, len=3)",
+      "tf.strings.substr(input=b'thirteen', pos=[1, 5], len=[3, 2])"
+    ],
+    "notes": "Supports broadcasting for 'pos' and 'len'. The 'unit' parameter can be 'BYTE' or 'UTF8_CHAR'. A negative 'pos' value is treated as a distance backwards from the end of the string."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.to_bfloat16",
+    "replacement_api": "tensorflow.cast",
+    "description": "Casts a tensor to the bfloat16 (Brain Floating Point) data type.",
+    "signature": "tf.cast(x, dtype, name=None)",
+    "usage_examples": [
+      "x_bf16 = tf.cast(x, tf.bfloat16)"
+    ],
+    "notes": "In TensorFlow 2, specific 'to_type' functions are replaced by the general 'tf.cast' operator. Note that converting native Python scalars directly via 'tf.cast' can lead to precision loss; 'tf.convert_to_tensor' is recommended for non-tensor inputs."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.to_complex128",
+    "replacement_api": "tensorflow.cast",
+    "description": "Casts a tensor to the complex128 data type.",
+    "signature": "tf.cast(x, dtype, name=None)",
+    "usage_examples": [
+      "x_complex = tf.cast(x, tf.complex128)"
+    ],
+    "notes": "When casting from complex types to real types, only the real part is returned. When casting from real to complex, the imaginary part is set to 0. This behavior matches NumPy."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.to_complex64",
+    "replacement_api": "tensorflow.cast",
+    "description": "Casts a tensor to the complex64 data type.",
+    "signature": "tf.cast(x, dtype, name=None)",
+    "usage_examples": [
+      "x_complex = tf.cast(x, tf.complex64)"
+    ],
+    "notes": "Similar to complex128, casting from real to complex64 will initialize the imaginary component to 0. Use 'tf.dtypes.cast' as an alternate alias for this operation."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.to_double",
+    "replacement_api": "tensorflow.cast",
+    "description": "Casts a tensor to the float64 (double precision) data type.",
+    "signature": "tf.cast(x, dtype, name=None)",
+    "usage_examples": [
+      "x_double = tf.cast(x, tf.float64)"
+    ],
+    "notes": "In TensorFlow 1.x, 'to_double' was a convenience function for 'float64'. In TF 2.x, use 'tf.cast' with 'tf.float64' as the destination dtype."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.to_float",
+    "replacement_api": "tensorflow.cast",
+    "description": "Casts a tensor to the float32 data type.",
+    "signature": "tf.cast(x, dtype, name=None)",
+    "usage_examples": [
+      "x_float = tf.cast(x, tf.float32)"
+    ],
+    "notes": "Legacy code using 'to_float' should be migrated to 'tf.cast' with 'tf.float32'. Be aware that casting NaN or Inf values to integral types (if the logic is reversed) results in undefined behavior."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.to_int32",
+    "replacement_api": "tensorflow.cast",
+    "description": "Casts a tensor to the int32 data type.",
+    "signature": "tf.cast(x, dtype, name=None)",
+    "usage_examples": [
+      "x_int = tf.cast(x, tf.int32)"
+    ],
+    "notes": "Casting floating-point values to integers via 'tf.cast' will truncate the fractional part. For example, 1.8 becomes 1."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.to_int64",
+    "replacement_api": "tensorflow.cast",
+    "description": "Casts a tensor to the int64 data type.",
+    "signature": "tf.cast(x, dtype, name=None)",
+    "usage_examples": [
+      "x_int64 = tf.cast(x, tf.int64)"
+    ],
+    "notes": "Standard integer casting behavior applies. 'tf.cast' supports a wide range of numeric types including uint8, int16, and various float precisions as source inputs."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.train.experimental.DynamicLossScale",
+    "replacement_api": "tensorflow.keras.mixed_precision.LossScaleOptimizer",
+    "description": "An optimizer wrapper that dynamically scales the loss to prevent numeric underflow when float16 is used during training.",
+    "signature": "tf.keras.mixed_precision.LossScaleOptimizer(inner_optimizer, initial_scale=(2.0 ** 15), dynamic_growth_steps=2000, **kwargs)",
+    "usage_examples": [
+      "base_optimizer = tf.keras.optimizers.Adam()",
+      "optimizer = tf.keras.mixed_precision.LossScaleOptimizer(base_optimizer)"
+    ],
+    "notes": "If a nonfinite gradient is encountered, the loss scale is halved and the step is skipped. If no nonfinite gradients occur for 'dynamic_growth_steps', the scale is doubled. It is recommended to start with a high initial scale."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.train.experimental.FixedLossScale",
+    "replacement_api": "tensorflow.keras.mixed_precision.LossScaleOptimizer",
+    "description": "Applies a loss scale to an optimizer; in the case of a fixed scale, the dynamic adjustment logic is disabled.",
+    "signature": "tf.keras.mixed_precision.LossScaleOptimizer(inner_optimizer, initial_scale=scale_value, dynamic=False)",
+    "usage_examples": [
+      "optimizer = tf.keras.mixed_precision.LossScaleOptimizer(inner_optimizer, initial_scale=1024.0, dynamic=False)"
+    ],
+    "notes": "While the v1 API provided a separate class for fixed scaling, the TF2 Keras implementation consolidates this into LossScaleOptimizer. Setting 'dynamic=False' (if supported by the specific version) or simply using a very high growth step achieves similar behavior, though dynamic scaling is generally preferred."
+  },
+  {
+    "deprecated_api": "tensorflow.compat.v1.uniform_unit_scaling_initializer",
+    "replacement_api": "tensorflow.initializers.variance_scaling",
+    "description": "An initializer that adapts its scale to the shape of weight tensors to keep the scale of gradients approximately constant.",
+    "signature": "tf.keras.initializers.VarianceScaling(scale=1.0, mode='fan_in', distribution='truncated_normal', seed=None)",
+    "usage_examples": [
+      "initializer = tf.keras.initializers.VarianceScaling(scale=2.0, mode='fan_in', distribution='uniform')",
+      "layer = tf.keras.layers.Dense(3, kernel_initializer=initializer)"
+    ],
+    "notes": "The scale is determined by the number of input units (fan_in), output units (fan_out), or their average (fan_avg). The 'distribution' parameter allows choosing between uniform and normal distributions."
+  },
+  {
+    "deprecated_api": "tensorflow.config.experimental_run_functions_eagerly",
+    "replacement_api": "tensorflow.config.run_functions_eagerly",
+    "description": "Enables or disables eager execution of code within @tf.function decorators.",
+    "signature": "tf.config.run_functions_eagerly(run_eagerly)",
+    "usage_examples": [
+      "tf.config.run_functions_eagerly(True)",
+      "tf.config.run_functions_eagerly(False)"
+    ],
+    "notes": "Enabling this allows for line-by-line debugging with Python print statements and pdb breakpoints. However, it significantly slows down execution and should be used only for debugging, not in production."
+  },
+  {
+    "deprecated_api": "tensorflow.distribute.experimental.MultiWorkerMirroredStrategy",
+    "replacement_api": "tensorflow.distribute.MultiWorkerMirroredStrategy",
+    "description": "A distribution strategy for synchronous training across multiple workers, each potentially having multiple GPUs.",
+    "signature": "tf.distribute.MultiWorkerMirroredStrategy(cluster_resolver=None, communication_options=None)",
+    "usage_examples": [
+      "strategy = tf.distribute.MultiWorkerMirroredStrategy()",
+      "with strategy.scope():\n    model = create_model()\n    model.compile(...)"
+    ],
+    "notes": "Replicates variables and computations to each local device and uses all-reduce for collective communication. It requires setting the 'TF_CONFIG' environment variable on each worker. For TPU training, use TPUStrategy instead."
+  },
+  {
+    "deprecated_api": "tensorflow.div",
+    "replacement_api": "tensorflow.divide",
+    "description": "Computes Python-style (floating-point) division of x by y.",
+    "signature": "tf.math.divide(x, y, name=None)",
+    "usage_examples": [
+      "x = tf.constant([16, 12, 11])",
+      "y = tf.constant([4, 6, 2])",
+      "tf.divide(x, y)"
+    ],
+    "notes": "Unlike the deprecated tf.div which could perform integer division on integer inputs, tf.divide always performs floating-point division, returning a float result even if both inputs are integers."
+  },
+  {
+    "deprecated_api": "tensorflow.initialize_all_variables",
+    "replacement_api": "tensorflow.global_variables_initializer",
+    "description": "Returns an Op that initializes global variables in the current graph.",
+    "signature": "tf.compat.v1.global_variables_initializer()",
+    "usage_examples": [
+      "sess.run(tf.compat.v1.global_variables_initializer())"
+    ],
+    "notes": "In TensorFlow 2, variables are initialized immediately upon creation (eager execution), making this call unnecessary for modern code. It is kept for compatibility with legacy graph-mode code."
+  },
+  {
+    "deprecated_api": "tensorflow.initializers.uniform_unit_scaling",
+    "replacement_api": "tensorflow.initializers.variance_scaling",
+    "description": "An initializer that adapts its scale to the shape of weight tensors to maintain the variance of signals across layers.",
+    "signature": "tf.keras.initializers.VarianceScaling(scale=1.0, mode='fan_in', distribution='truncated_normal', seed=None)",
+    "usage_examples": [
+      "initializer = tf.keras.initializers.VarianceScaling(scale=1.0, mode='fan_in', distribution='uniform')",
+      "layer = tf.keras.layers.Dense(3, kernel_initializer=initializer)"
+    ],
+    "notes": "Replaces the legacy uniform unit scaling. When migrating, 'normal' distributions in v1 map to 'truncated_normal' in the TF2 VarianceScaling API. The dtype should be passed during the call to the initializer rather than at construction."
+  },
+  {
+    "deprecated_api": "tensorflow.metrics.auc",
+    "replacement_api": "tensorflow.keras.metrics.AUC",
+    "description": "Approximates the Area Under the Curve (AUC) of the ROC or Precision-Recall (PR) curves using Riemann sums.",
+    "signature": "tf.keras.metrics.AUC(num_thresholds=200, curve='ROC', summation_method='interpolation', name=None, dtype=None, thresholds=None, multi_label=False, num_labels=None, label_weights=None, from_logits=False)",
+    "usage_examples": [
+      "m = tf.keras.metrics.AUC(num_thresholds=100)",
+      "m.update_state([0, 0, 1, 1], [0, 0.5, 0.3, 0.9])",
+      "model.compile(optimizer='sgd', loss='binary_crossentropy', metrics=[tf.keras.metrics.AUC(from_logits=True)])"
+    ],
+    "notes": "Provides a more robust and flexible implementation than the v1 metric. It supports multi-label data and Riemann summation methods like 'interpolation', 'minoring', and 'majoring'. Ensure 'from_logits' is set correctly to match the model's output type."
+  },
+  {
+    "deprecated_api": "tensorflow.mixed_precision.DynamicLossScale",
+    "replacement_api": "tensorflow.keras.mixed_precision.LossScaleOptimizer",
+    "description": "An optimizer wrapper that dynamically scales the loss to prevent numeric underflow in intermediate gradients when float16 is used.",
+    "signature": "tf.keras.mixed_precision.LossScaleOptimizer(inner_optimizer, initial_scale=(2.0 ** 15), dynamic_growth_steps=2000, **kwargs)",
+    "usage_examples": [
+      "base_optimizer = tf.keras.optimizers.Adam()",
+      "optimizer = tf.keras.mixed_precision.LossScaleOptimizer(base_optimizer)",
+      "with tf.GradientTape() as tape:\n    scaled_loss = optimizer.scale_loss(loss)"
+    ],
+    "notes": "Replaces the stable v1 dynamic loss scale. If a non-finite gradient is encountered, the loss scale is halved and the training step is skipped. The scale doubles if no non-finite gradients occur for 'dynamic_growth_steps'."
+  },
+  {
+    "deprecated_api": "tensorflow.mixed_precision.FixedLossScale",
+    "replacement_api": "tensorflow.keras.mixed_precision.LossScaleOptimizer",
+    "description": "An optimizer wrapper used to apply a fixed loss scale factor to gradients to prevent underflow.",
+    "signature": "tf.keras.mixed_precision.LossScaleOptimizer(inner_optimizer, initial_scale=scale_value, dynamic=False)",
+    "usage_examples": [
+      "optimizer = tf.keras.mixed_precision.LossScaleOptimizer(inner_optimizer, initial_scale=1024.0, dynamic=False)"
+    ],
+    "notes": "In TensorFlow 2, fixed loss scaling is achieved by configuring the LossScaleOptimizer with dynamic=False. However, dynamic scaling is generally recommended to avoid manual tuning of the scale factor."
+  },
+  {
+    "deprecated_api": "tensorflow.mixed_precision.experimental.DynamicLossScale",
+    "replacement_api": "tensorflow.keras.mixed_precision.LossScaleOptimizer",
+    "description": "The standardized Keras implementation for dynamic loss scaling, replacing the experimental v1 version.",
+    "signature": "tf.keras.mixed_precision.LossScaleOptimizer(inner_optimizer, **kwargs)",
+    "usage_examples": [
+      "optimizer = tf.keras.mixed_precision.LossScaleOptimizer(tf.keras.optimizers.RMSprop())"
+    ],
+    "notes": "Consolidates experimental mixed precision features into the stable Keras API. It provides better integration with 'Model.fit' and higher-level Keras abstractions."
+  },
+  {
+    "deprecated_api": "tensorflow.mixed_precision.experimental.FixedLossScale",
+    "replacement_api": "tensorflow.keras.mixed_precision.LossScaleOptimizer",
+    "description": "A wrapper for an optimizer that applies a constant scale factor to the loss.",
+    "signature": "tf.keras.mixed_precision.LossScaleOptimizer(inner_optimizer, initial_scale=fixed_scale, dynamic=False)",
+    "usage_examples": [
+      "optimizer = tf.keras.mixed_precision.LossScaleOptimizer(base_opt, initial_scale=512.0, dynamic=False)"
+    ],
+    "notes": "Replaces the experimental fixed scale implementation. Note that using a fixed scale is often brittle as it may lead to overflow if too high or underflow if too low across different training stages."
+  },
+  {
+    "deprecated_api": "tensorflow.multinomial",
+    "replacement_api": "tensorflow.random.categorical",
+    "description": "Draws samples from a categorical distribution using unnormalized log-probabilities (logits).",
+    "signature": "tf.random.categorical(logits, num_samples, dtype=None, seed=None, name=None)",
+    "usage_examples": [
+      "logits = tf.math.log([[0.5, 0.5]])",
+      "samples = tf.random.categorical(logits, 5)"
+    ],
+    "notes": "Renamed to categorical because it samples from a categorical distribution rather than a multinomial one. It requires a 2-D input of shape [batch_size, num_classes]. The output type defaults to int64."
+  },
+  {
+    "deprecated_api": "tensorflow.random.multinomial",
+    "replacement_api": "tensorflow.random.categorical",
+    "description": "Draws samples from a categorical distribution for each row of the provided logits.",
+    "signature": "tf.random.categorical(logits, num_samples, dtype=None, seed=None, name=None)",
+    "usage_examples": [
+      "samples = tf.random.categorical(tf.constant([[1.0, 2.0, 3.0]]), 1)"
+    ],
+    "notes": "This is a direct replacement for the legacy multinomial sampling operation. It is often used in generative tasks like text generation with RNNs or reinforcement learning (Actor-Critic methods)."
+  },
+  {
+    "deprecated_api": "tensorflow.saved_model.loader.load",
+    "replacement_api": "tensorflow.saved_model.load",
+    "description": "Loads a SavedModel from a directory into a trackable object.",
+    "signature": "tf.saved_model.load(export_dir, tags=None, options=None)",
+    "usage_examples": [
+      "model = tf.saved_model.load(export_dir, tags=['foo-tag'])"
+    ],
+    "notes": "The v1 version was based on sessions and graphs, whereas the v2 version returns an object that encapsulates the model's variables and functions. It is compatible with eager execution and does not require an import_scope."
+  },
+  {
+    "deprecated_api": "tensorflow.sparse_to_dense",
+    "replacement_api": "tensorflow.sparse.to_dense",
+    "description": "Converts a SparseTensor into a dense tensor, filling unspecified indices with a default value.",
+    "signature": "tf.sparse.to_dense(sp_input, default_value=None, validate_indices=True, name=None)",
+    "usage_examples": [
+      "sp_input = tf.sparse.SparseTensor(indices=[[0, 1]], values=[7], dense_shape=[3, 5])",
+      "dense_tensor = tf.sparse.to_dense(sp_input)"
+    ],
+    "notes": "The replacement API operates on a SparseTensor object. By default, 'default_value' is zero. If 'validate_indices' is True, the function checks if indices are sorted and contain no repeats."
+  },
+  {
+    "deprecated_api": "tensorflow.substr",
+    "replacement_api": "tensorflow.strings.substr",
+    "description": "Returns substrings from a Tensor of strings starting at 'pos' with a total length of 'len'.",
+    "signature": "tf.strings.substr(input, pos, len, unit='BYTE', name=None)",
+    "usage_examples": [
+      "tf.strings.substr(input=[b'Hello', b'World'], pos=1, len=3)",
+      "tf.strings.substr(input=b'thirteen', pos=[1, 5], len=[3, 2])"
+    ],
+    "notes": "Supports broadcasting for 'pos' and 'len'. The 'unit' parameter allows choosing between 'BYTE' (default) and 'UTF8_CHAR' for Unicode-aware slicing. A negative 'pos' value indexes from the end of the string."
+  },
+  {
+    "deprecated_api": "tensorflow.to_bfloat16",
+    "replacement_api": "tensorflow.cast",
+    "description": "Casts a tensor to the bfloat16 (Brain Floating Point) data type.",
+    "signature": "tf.cast(x, dtype, name=None)",
+    "usage_examples": [
+      "tf.cast(x, tf.bfloat16)"
+    ],
+    "notes": "In TensorFlow 2, specialized casting functions like to_bfloat16 were replaced by the general tf.cast operator. When converting non-tensor inputs (like Python floats), it is recommended to use tf.convert_to_tensor first to avoid precision loss."
+  },
+  {
+    "deprecated_api": "tensorflow.to_complex128",
+    "replacement_api": "tensorflow.cast",
+    "description": "Casts a tensor to the complex128 data type.",
+    "signature": "tf.cast(x, dtype, name=None)",
+    "usage_examples": [
+      "tf.cast(x, tf.complex128)"
+    ],
+    "notes": "When casting from real types to complex types, the imaginary part is set to 0. Conversely, casting from complex to real types returns only the real part of the input, matching NumPy's behavior."
+  },
+  {
+    "deprecated_api": "tensorflow.to_complex64",
+    "replacement_api": "tensorflow.cast",
+    "description": "Casts a tensor to the complex64 data type.",
+    "signature": "tf.cast(x, dtype, name=None)",
+    "usage_examples": [
+      "tf.cast(x, tf.complex64)"
+    ],
+    "notes": "Used to convert numeric tensors to single-precision complex numbers. Like other casting operations, tf.dtypes.cast is a valid alias for this function."
+  },
+  {
+    "deprecated_api": "tensorflow.to_double",
+    "replacement_api": "tensorflow.cast",
+    "description": "Casts a tensor to the float64 (double precision) data type.",
+    "signature": "tf.cast(x, dtype, name=None)",
+    "usage_examples": [
+      "tf.cast(x, tf.float64)"
+    ],
+    "notes": "Provides high-precision floating-point conversion. Note that casting NaN and Inf values to integral types has undefined behavior, so verify input data ranges if subsequently casting to integers."
+  },
+  {
+    "deprecated_api": "tensorflow.to_float",
+    "replacement_api": "tensorflow.cast",
+    "description": "Casts a tensor to the float32 data type.",
+    "signature": "tf.cast(x, dtype, name=None)",
+    "usage_examples": [
+      "tf.cast(x, tf.float32)"
+    ],
+    "notes": "The standard single-precision floating-point cast. This is the most common target for normalization or preparation of input data for deep learning models."
+  },
+  {
+    "deprecated_api": "tensorflow.to_int32",
+    "replacement_api": "tensorflow.cast",
+    "description": "Casts a tensor to the int32 data type.",
+    "signature": "tf.cast(x, dtype, name=None)",
+    "usage_examples": [
+      "tf.cast(x, tf.int32)"
+    ],
+    "notes": "When casting floating-point values to integers, the fractional part is truncated (e.g., 2.2 becomes 2 and 1.8 becomes 1)."
+  },
+  {
+    "deprecated_api": "tensorflow.to_int64",
+    "replacement_api": "tensorflow.cast",
+    "description": "Casts a tensor to the int64 data type.",
+    "signature": "tf.cast(x, dtype, name=None)",
+    "usage_examples": [
+      "tf.cast(x, tf.int64)"
+    ],
+    "notes": "Typically used for indices or labels that require a larger range than int32. Ensure that the source tensor contains numeric types supported by the operation, such as various float or integer precisions."
+  },
+  {
+    "deprecated_api": "tensorflow.train.experimental.DynamicLossScale",
+    "replacement_api": "tensorflow.keras.mixed_precision.LossScaleOptimizer",
+    "description": "An optimizer wrapper that dynamically scales the loss to prevent numeric underflow in intermediate gradients when float16 is used.",
+    "signature": "tf.keras.mixed_precision.LossScaleOptimizer(inner_optimizer, initial_scale=(2.0 ** 15), dynamic_growth_steps=2000, **kwargs)",
+    "usage_examples": [
+      "base_optimizer = tf.keras.optimizers.Adam()",
+      "optimizer = tf.keras.mixed_precision.LossScaleOptimizer(base_optimizer)",
+      "with tf.GradientTape() as tape:\n    scaled_loss = optimizer.scale_loss(loss)"
+    ],
+    "notes": "Replaces the experimental v1 dynamic loss scale. If a nonfinite gradient is encountered, the loss scale is halved and the step is skipped. If no nonfinite gradients occur for 'dynamic_growth_steps', the loss scale is doubled."
+  },
+  {
+    "deprecated_api": "tensorflow.train.experimental.FixedLossScale",
+    "replacement_api": "tensorflow.keras.mixed_precision.LossScaleOptimizer",
+    "description": "Wraps an optimizer to apply a fixed loss scale factor to prevent gradient underflow.",
+    "signature": "tf.keras.mixed_precision.LossScaleOptimizer(inner_optimizer, initial_scale=scale_value, dynamic=False)",
+    "usage_examples": [
+      "optimizer = tf.keras.mixed_precision.LossScaleOptimizer(inner_opt, initial_scale=1024.0, dynamic=False)"
+    ],
+    "notes": "The v1 class for fixed scaling is replaced by the versatile LossScaleOptimizer in TF2. Using dynamic=False disables the automatic scale updates, effectively maintaining the initial_scale throughout training."
+  },
+  {
+    "deprecated_api": "tensorflow.uniform_unit_scaling_initializer",
+    "replacement_api": "tensorflow.initializers.variance_scaling",
+    "description": "An initializer capable of adapting its scale to the shape of weights tensors to maintain the variance of gradients.",
+    "signature": "tf.keras.initializers.VarianceScaling(scale=1.0, mode='fan_in', distribution='truncated_normal', seed=None)",
+    "usage_examples": [
+      "initializer = tf.keras.initializers.VarianceScaling(scale=2.0, mode='fan_avg', distribution='uniform')",
+      "weight = tf.Variable(initializer(shape=(64, 32), dtype=tf.float32))"
+    ],
+    "notes": "When migrating to the TF2 API, move to tf.keras.initializers.VarianceScaling. Note that 'normal' distribution in v1 maps to 'truncated_normal' in v2. The TF2 API takes the 'dtype' as a __call__ argument rather than a constructor argument."
+  }
+]
