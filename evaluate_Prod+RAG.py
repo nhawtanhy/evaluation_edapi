@@ -74,9 +74,7 @@ def prepare_requests(data):
     return requests
 
 def main():
-    # Model Loading (Priority: Environment Variable -> Local Path -> HF Hub)
-    model_name = os.environ.get("MODEL_NAME", "/workspace/NCKH/prod_model")
-    
+    model_name = "HuyTran1301/Deepseek_PROD_ApiDeprecated"
     script_dir = os.path.dirname(os.path.abspath(__file__))
     dataset_path = os.path.join(script_dir, "dataset", "all.json")
     
@@ -123,7 +121,7 @@ def main():
         tokenizer.pad_token = tokenizer.eos_token
 
     tokenizer.pad_token_id = tokenizer.eos_token_id
-    
+
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         trust_remote_code=True,
