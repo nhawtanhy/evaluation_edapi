@@ -105,7 +105,7 @@ def main():
     model.eval()
 
     # 3. PREPARE DATA
-    num_test_samples = 20 # Set to None to run all
+    num_test_samples = None # Set to None to run all
     with open(dataset_path, "r") as f:
         data = json.load(f)
     if num_test_samples:
