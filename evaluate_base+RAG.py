@@ -71,7 +71,7 @@ def main():
     model_name = "deepseek-ai/deepseek-coder-1.3b-instruct" 
     
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    dataset_path = BASE_DIR / "dataset" / "all.json"
+    dataset_path = os.path.join(script_dir, "dataset", "all.json")
     
     # 1. INITIALIZE RAG INDEX (SAHR Style)
     print(f"[*] Initializing SAHR Retrieval Index...")
@@ -105,7 +105,7 @@ def main():
     model.eval()
 
     # 3. PREPARE DATA
-    num_test_samples = 20 # Set to None to run all
+    num_test_samples = None # Set to None to run all
     with open(dataset_path, "r") as f:
         data = json.load(f)
     if num_test_samples:
