@@ -47,7 +47,7 @@ with torch.no_grad():
         attention_mask=inputs["attention_mask"],
         max_new_tokens=64,
         do_sample=False,        # Turn off sampling
-        repetition_penalty=1.0, # Turn off penalty
+        repetition_penalty=1.2, # Turn off penalty
         pad_token_id=tokenizer.eos_token_id,
         eos_token_id=tokenizer.eos_token_id,
     )
