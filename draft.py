@@ -7,22 +7,32 @@ tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=True)
 model = AutoModelForCausalLM.from_pretrained(model_name).cuda()
 model.eval()
 
-# IMPORTANT FIX
+# IMPORTANT (from your config)
 tokenizer.padding_side = "left"
 tokenizer.pad_token = tokenizer.eos_token
 
-prompt = "Write a simple sentence:\n"
 
-inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+# ===== CHAT FORMAT (CRITICAL FIX) =====
+messages = [
+    {"role": "user", "content": "Write a simple sentence."}
+]
+
+inputs = tokenizer.apply_chat_template(
+    messages,
+    add_generation_prompt=True,
+    return_tensors="pt",
+    padding=True
+).to(model.device)
 
 with torch.no_grad():
     outputs = model.generate(
-        **inputs,
+        inputs,
         max_new_tokens=40,
-        do_sample=True,          # 👈 FIX 1 (important)
-        top_p=0.9,               # 👈 FIX 2
-        temperature=0.7,         # 👈 FIX 3
-        repetition_penalty=1.1,  # 👈 FIX 4 (VERY useful)
+        do_sample=True,
+        temperature=0.7,
+        top_p=0.9,
+        repetition_penalty=1.1,
+        eos_token_id=tokenizer.eos_token_id,
         pad_token_id=tokenizer.eos_token_id,
     )
 
