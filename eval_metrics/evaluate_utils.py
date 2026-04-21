@@ -78,36 +78,48 @@ class Metric:
         return format_score(float(0))
 
 def batch_generate(model, tok, prompts, max_length, sample_generate=False):
+
+    if isinstance(prompts, str):
+        prompts = [prompts]
+
+    instruct_prompts = []
+    for p in prompts:
+        prompt_text = (
+            "Complete and output the next line for the following Python function:\n"
+            "```python\n"
+            f"{p}"
+        )
+        instruct_prompts.append(prompt_text)
+
     prompt_tok = tok(
-        prompts,
+        instruct_prompts,
         add_special_tokens=True,
         padding=True,
         truncation=True,
         return_tensors="pt",
     ).to(model.device)
-    gen_args = {
-            'inputs': prompt_tok['input_ids'],
-            'attention_mask': prompt_tok['input_ids'].ne(tok.pad_token_id),
-            'max_new_tokens': max_length,
-            'pad_token_id': tok.eos_token_id,
-            'eos_token_id': tok.eos_token_id,
-            'top_k': None,
-            'top_p': None,
-            'temperature': 0.0,
-            'do_sample': False,
-            'num_beams': 1,
-            'num_return_sequences': 1,
-        }
-    with torch.no_grad():
-        if sample_generate:
-            gen_args.update({
-                'do_sample': True,
-                'num_beams': 1,
-                'top_k': 5,
-            })
-        gen_tokens = model.generate(**gen_args)
-    return tok.batch_decode(gen_tokens[:, prompt_tok['input_ids'].shape[1]:])
 
+    gen_args = {
+        'inputs': prompt_tok['input_ids'],
+        'attention_mask': prompt_tok['input_ids'].ne(tok.pad_token_id),
+        'max_new_tokens': max_length,
+        'pad_token_id': tok.eos_token_id,
+        'eos_token_id': tok.eos_token_id,
+        'top_k': None,
+        'top_p': None,
+        'temperature': 1.0,   # keep same as friend
+        'do_sample': False,
+        'num_beams': 1,
+        'num_return_sequences': 1,
+    }
+
+    with torch.no_grad():
+        gen_tokens = model.generate(**gen_args)
+
+    return tok.batch_decode(
+        gen_tokens[:, prompt_tok['input_ids'].shape[1]:],
+        skip_special_tokens=True   # 👈 IMPORTANT FIX
+    )
 
 def test_generation_quality(
     model,
