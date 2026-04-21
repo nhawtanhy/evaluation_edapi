@@ -7,7 +7,11 @@ model_name = "HuyTran1301/Deepseek_PROD_ApiDeprecated"
 # Load tokenizer + model
 # =========================
 tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=True)
-model = AutoModelForCausalLM.from_pretrained(model_name).cuda()
+model = AutoModelForCausalLM.from_pretrained(
+    model_name,
+    torch_dtype=torch.float32, # Use float32 for stability
+    trust_remote_code=True
+).cuda()
 model.eval()
 
 # Fix padding
@@ -45,11 +49,9 @@ with torch.no_grad():
     outputs = model.generate(
         input_ids=inputs["input_ids"],
         attention_mask=inputs["attention_mask"],
-        max_new_tokens=40,
-        do_sample=True,
-        temperature=0.8,
-        top_p=0.95,
-        repetition_penalty=1.2,
+        max_new_tokens=64,
+        do_sample=False,        # Turn off sampling
+        repetition_penalty=1.0, # Turn off penalty
         pad_token_id=tokenizer.eos_token_id,
         eos_token_id=tokenizer.eos_token_id,
     )
