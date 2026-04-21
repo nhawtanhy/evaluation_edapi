@@ -113,8 +113,7 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(
         model_name,
         trust_remote_code=True,
-        #padding_side="left",
-        padding_side="right",
+        padding_side="left",
         use_fast=True,   # 👈 IMPORTANT
     )
 
