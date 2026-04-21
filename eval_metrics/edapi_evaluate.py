@@ -25,8 +25,6 @@ LOG = logging.getLogger(__name__)
 STAGE_1_TOP_K = 50
 STAGE_2_TOP_K = 3
 
-import re
-
 # --- SAHR UTILITIES (Must be in this file) ---
 def smart_tokenize(text):
     if not text: return []
@@ -95,10 +93,7 @@ Reference information:
 {context}
 
 Rules:
-- The MOST RELEVANT API is [1]
-- You MUST use: {main_replacement}
 - Do NOT use any deprecated API
-- Prefer API from [1] over others
 - Output ONLY valid Python code
 - Do NOT explain or add comments
 
@@ -198,9 +193,9 @@ def compute_edit_quality(
     rag_intent, retrieved_apis, is_ret_corr, mrr_val = get_rag_prompt(intent)
     rag_rephrase, _, _, _ = get_rag_prompt(rewritten_intent)
 
-    if not is_ret_corr:
+    if mrr_val == 0:
         rag_intent = intent
-        rag_rephrase = rewritten_intent  # keep consistency
+        rag_rephrase = rewritten_intent
 
     prompts_to_generate = [rag_intent, rag_rephrase]
     
@@ -210,7 +205,7 @@ def compute_edit_quality(
         prompts_to_generate.append(rag_port)
 
     # Execute Batch Generation (Efficiently)
-    gen_strs_raw = batch_generate(model, tok, prompts_to_generate, max_length=128)
+    gen_strs_raw = batch_generate(model, tok, prompts_to_generate, max_length=256)
     
     # Process Predictions
     _preds = [clean_pred(p) for p in gen_strs_raw]

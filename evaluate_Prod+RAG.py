@@ -113,14 +113,17 @@ def main():
     print(f"[*] Loading Model: {model_name}")
 
     tokenizer = AutoTokenizer.from_pretrained(
-        model_name, 
-        trust_remote_code=True, 
-        padding_side="left"
+        model_name,
+        trust_remote_code=True,
+        padding_side="left",
+        use_fast=True,   # 👈 IMPORTANT
     )
 
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
+    tokenizer.pad_token_id = tokenizer.eos_token_id
+    
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         trust_remote_code=True,

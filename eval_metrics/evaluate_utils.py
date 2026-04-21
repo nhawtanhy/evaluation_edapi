@@ -93,7 +93,7 @@ def batch_generate(model, tok, prompts, max_length, sample_generate=False):
             'eos_token_id': tok.eos_token_id,
             'top_k': None,
             'top_p': None,
-            'temperature': 1.0,
+            'temperature': 0.0,
             'do_sample': False,
             'num_beams': 1,
             'num_return_sequences': 1,
