@@ -20,8 +20,6 @@ from eval_metrics.evaluate_utils import MATCH_METRICS
 # ==========================================
 # RAG CONFIGURATION (Matches Module)
 # ==========================================
-from pathlib import Path
-
 BASE_DIR = Path(__file__).resolve().parent
 KB_PATH = BASE_DIR / "Knowledge_base.json"
 print("Exists:", KB_PATH.exists())
@@ -67,11 +65,14 @@ def prepare_requests(data):
     return requests
 
 def main():
-    # SWITCHED TO INSTRUCT MODEL
-    model_name = "deepseek-ai/deepseek-coder-1.3b-instruct" 
+    # UPDATED: Path to your unlearned model
+    model_name = os.environ.get(
+        "MODEL_NAME", 
+        "HuyTran1301/Deepseek_PROD_ApiDeprecated"
+    )
     
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    dataset_path = BASE_DIR / "dataset" / "all.json"
+    dataset_path = os.path.join(script_dir, "dataset", "all.json")
     
     # 1. INITIALIZE RAG INDEX (SAHR Style)
     print(f"[*] Initializing SAHR Retrieval Index...")
@@ -93,15 +94,25 @@ def main():
     bm25 = BM25Okapi(tokenized_corpus)
     print("✓ RAG Index Ready.")
 
-    # 2. LOAD MODEL (Instruct)
-    print(f"Loading model: {model_name}")
-    tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True, padding_side="left")
+    # 2. LOAD UNLEARNED MODEL
+    print(f"Loading Model from: {model_name}")
+
+    tokenizer = AutoTokenizer.from_pretrained(
+        model_name,
+        trust_remote_code=True,
+        padding_side="left"
+    )
+
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
-    
+
     model = AutoModelForCausalLM.from_pretrained(
-        model_name, trust_remote_code=True, torch_dtype=torch.float16, device_map="auto"
+        model_name,
+        trust_remote_code=True,
+        torch_dtype=torch.float16,
+        device_map="auto"
     )
+
     model.eval()
 
     # 3. PREPARE DATA
@@ -151,7 +162,7 @@ def main():
             print(f"Error evaluating case {request['case_id']}: {e}")
             continue
         
-    # 5. AGGREGATE & SAVE (Now includes mean_results.json)
+    # 5. AGGREGATE & SAVE
     print("\nComputing mean metrics...")
     mean_metrics = {}
     for metric_name in ['efficacy', 'generalization', 'portability', 'specificity']:
@@ -161,7 +172,6 @@ def main():
                     if metric_name in item.get('post', {}) and match_metric in item['post'][metric_name]]
             
             if vals:
-                # Store as (Mean, StdDev)
                 mean_metrics[metric_name][match_metric] = (
                     round(float(np.mean(vals)) * 100, 2), 
                     round(float(np.std(vals)) * 100, 2)
@@ -169,19 +179,17 @@ def main():
             else:
                 mean_metrics[metric_name][match_metric] = (0, 0)
     
-    # Save Paths
-    results_path = os.path.join(script_dir, "results_rag.json")
-    mean_results_path = os.path.join(script_dir, "mean_results_rag.json")
+    # UPDATED: Output paths for the unlearned model run
+    results_path = os.path.join(script_dir, "results_unlearned_rag.json")
+    mean_results_path = os.path.join(script_dir, "mean_results_unlearned_rag.json")
     
-    # Save individual results
     with open(results_path, "w", encoding='utf-8') as f:
         json.dump(all_metrics, f, ensure_ascii=False, indent=4)
         
-    # Save aggregated mean results
     with open(mean_results_path, "w", encoding='utf-8') as f:
         json.dump(mean_metrics, f, ensure_ascii=False, indent=4)
         
-    print(f"\nDone! Results saved to:")
+    print(f"\nDone! Unlearned results saved to:")
     print(f"- {results_path}")
     print(f"- {mean_results_path}")
 
