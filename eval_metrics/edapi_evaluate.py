@@ -1,13 +1,14 @@
 """
-EDAPI evaluation: compute edit quality metrics.
-Adapted from EDAPI codellmeditor/evaluate/edapi_evaluate.py with standalone imports.
+EDAPI evaluation: compute edit quality metrics (SAHR RAG version).
+Clean rewrite based on friend's implementation.
 """
 
 import typing
-import torch
 import re
 import numpy as np
-import copy
+import torch
+import logging
+
 from .evaluate_utils import (
     batch_generate,
     Metric,
@@ -18,273 +19,315 @@ from .evaluate_utils import (
     extract_first_func,
     extract_apis_in_first_stmt,
 )
-import logging
 
 LOG = logging.getLogger(__name__)
 
+# =========================
+# CONFIG
+# =========================
 STAGE_1_TOP_K = 50
 STAGE_2_TOP_K = 3
 
-# --- SAHR UTILITIES (Must be in this file) ---
+
+# =========================
+# SAHR UTILITIES
+# =========================
 def smart_tokenize(text):
-    if not text: return []
-    text = text.replace("pd.", "pandas.").replace("np.", "numpy.").replace("tf.", "tensorflow.")
+    if not text:
+        return []
+
+    text = (
+        text.replace("pd.", "pandas.")
+            .replace("np.", "numpy.")
+            .replace("tf.", "tensorflow.")
+    )
+
     text = re.sub(r'([a-z])([A-Z])', r'\1 \2', text)
     text = re.sub(r'[\._\(\)\[\]=/"\':]', ' ', text)
+
     tokens = re.findall(r"[a-z0-9]{2,}", text.lower())
-    noise = {'def', 'self', 'class', 'return', 'if', 'else', 'for', 'in', 'while', 'assert', 'import'}
+
+    noise = {
+        'def', 'self', 'class', 'return', 'if', 'else', 'for', 'in',
+        'while', 'assert', 'import'
+    }
+
     return [t for t in tokens if t not in noise]
 
+
 def detect_libs(code_lower):
-    libs = set()
     signatures = {
         "pandas": ["pd.", "dataframe", "series", "read_csv", "iloc", "loc"],
         "numpy": ["np.", "array", "linspace", "zeros", "matmul"],
         "torch": ["torch.", "tensor", "nn.module", "cuda", "device", "grad"],
-        "tensorflow": ["tf.", "keras", "placeholder", "session", "layer"]
+        "tensorflow": ["tf.", "keras", "placeholder", "session", "layer"],
     }
+
+    libs = set()
     for lib, sigs in signatures.items():
-        if any(sig in code_lower for sig in sigs): libs.add(lib)
+        if any(sig in code_lower for sig in sigs):
+            libs.add(lib)
     return libs
+
 
 def extract_all_identifiers(code):
     code_lower = code.lower()
+
     words = set(re.findall(r'\b\w+\b', code_lower))
     sub_words = set()
+
     for w in words:
-        if '_' in w: sub_words.update(w.split('_'))
+        if '_' in w:
+            sub_words.update(w.split('_'))
+
     calls = set(re.findall(r'\.(\w+)\s*\(', code_lower))
+
     return words | sub_words | calls
+
 
 def build_augmented_prompt(probing_input, retrieved_docs):
     if not retrieved_docs:
         return probing_input
 
-    context_blocks = []
+    blocks = []
 
     for i, doc in enumerate(retrieved_docs[:3], 1):
-        example = ""
-        if doc.get("usage_examples"):
-            example = doc["usage_examples"][0]
+        example = doc.get("usage_examples", [""])[0] if doc.get("usage_examples") else ""
 
         tag = " (MOST RELEVANT)" if i == 1 else ""
 
-        block = f"""
+        blocks.append(f"""
 [{i}]{tag}
-Deprecated: {doc['deprecated_api']}
-Replacement: {doc['replacement_api']}
+Deprecated: {doc.get('deprecated_api', '')}
+Replacement: {doc.get('replacement_api', '')}
 Description: {doc.get('description', '')}
 Example:
 {example}
-"""
-        context_blocks.append(block.strip())
+""".strip())
 
-    context = "\n\n".join(context_blocks)
-
-    # Explicitly guide model to pick doc [1]
-    main_replacement = retrieved_docs[0]['replacement_api']
+    context = "\n\n".join(blocks)
 
     return f"""
 You are an expert Python developer.
 
-Your task: Replace deprecated APIs with the correct modern API.
+Task: Replace deprecated APIs with modern equivalents.
 
-Reference information:
+Reference:
 {context}
 
 Rules:
-- Do NOT use any deprecated API
+- Do NOT use deprecated APIs
 - Output ONLY valid Python code
-- Do NOT explain or add comments
+- No explanations
 
-Now complete the following code:
+Now complete:
 
 {probing_input.rstrip()}
-"""
+""".strip()
 
+
+# =========================
+# MAIN EVAL FUNCTION
+# =========================
 def compute_edit_quality(
     model,
     tok,
     record: typing.Dict,
-    bm25,  # Added for SAHR
-    kb,    # Added for SAHR
+    bm25,
+    kb,
     test_generation: bool = False,
-) -> typing.Dict:
-    """
-    Compute 4 metrics for a single record using SAHR RAG.
-    """
-    # 1. Unpack evaluation record
+):
     intent = record['prompt']
     rewritten_intent = record['rephrase_prompt']
     rewritten_target = record['rephrase_target_new']
     target_snippet = record['target_new']
+
     neighborhoods = record['specificity']
     reference_dict = record['reference_dict']
     alias_dict = record['alias_dict']
     rephrase_reference_dict = record['rephrase_reference_dict']
-    new_api = record['new_api']
-    portability = record["portability"]
-    target_old_api = record.get('deprecated_api', "")
 
-    # Handle replace_prompt logic if present
+    new_api = record['new_api']
+    portability = record.get("portability", "")
+
     if 'replace_prompt' in record:
         intent = record['replace_prompt']
         rewritten_intent = record['replace_rephrase_prompt']
 
-    # ==========================================
-    # 2. INTERNAL SAHR RAG ENGINE
-    # ==========================================
+    # =========================
+    # RAG FUNCTION
+    # =========================
     def get_rag_prompt(text):
         if not text:
             return "", [], False, 0.0
 
-        # --- Stage 1: Sparse Recall ---
-        query_tokens = smart_tokenize(text)
-        candidates = bm25.get_top_n(query_tokens, kb, n=STAGE_1_TOP_K)
-        
-        # --- Stage 2: Syntactic Multiplier Reranking ---
+        tokens = smart_tokenize(text)
+        candidates = bm25.get_top_n(tokens, kb, n=STAGE_1_TOP_K)
+
         text_lower = text.lower()
-        feat = extract_all_identifiers(text)
-        active_libs = detect_libs(text_lower)
-        
-        scored_candidates = []
+        feats = extract_all_identifiers(text)
+        libs = detect_libs(text_lower)
+
+        scored = []
+
         for doc in candidates:
             method = doc.get('method_name', '')
             lib = doc.get('lib_name', '')
-            rank_score = 1.0 
-            
-            if lib in active_libs: rank_score *= 5.0
-            elif active_libs: rank_score *= 0.1 
-            if method in feat:
-                rank_score *= 10.0
-                if f".{method}" in text_lower: rank_score *= 2.0
-            else: rank_score *= 0.2
-            if len(method) <= 4 and method in feat: rank_score *= 2.0
 
-            scored_candidates.append((rank_score, doc))
+            score = 1.0
 
-        scored_candidates.sort(key=lambda x: x[0], reverse=True)
-        final_docs = [item[1] for item in scored_candidates[:STAGE_2_TOP_K]]
-        
-        # --- Robust Hit Detection (Checking Replacements) ---
-        retrieved_reps = [d.get('replacement_api', '').lower() for d in final_docs]
-        retrieved_deps = [d.get('deprecated_api', '') for d in final_docs]
-        
-        expected_rep = ""
-        if new_api and len(new_api) > 0 and isinstance(new_api[0], list):
-            expected_rep = new_api[0][0].lower()
-        
-        is_hit = False
-        mrr_score = 0.0
-        for i, rep in enumerate(retrieved_reps):
-            if expected_rep and (expected_rep in rep or rep in expected_rep):
-                if not is_hit:
-                    is_hit = True
-                    mrr_score = 1.0 / (i + 1)
-                break
-        
-        prompt = build_augmented_prompt(text, final_docs)
-        return prompt, retrieved_deps, is_hit, mrr_score
+            if lib in libs:
+                score *= 5.0
+            elif libs:
+                score *= 0.1
 
-    # ==========================================
-    # 3. RAG AUGMENTATION & BATCH GENERATION
-    # ==========================================
-    # Generate RAG prompts
-    rag_intent, retrieved_apis, is_ret_corr, mrr_val = get_rag_prompt(intent)
+            if method in feats:
+                score *= 10.0
+                if f".{method}" in text_lower:
+                    score *= 2.0
+            else:
+                score *= 0.2
+
+            scored.append((score, doc))
+
+        scored.sort(key=lambda x: x[0], reverse=True)
+        top_docs = [d for _, d in scored[:STAGE_2_TOP_K]]
+
+        retrieved = [d.get("replacement_api", "").lower() for d in top_docs]
+
+        expected = ""
+        if new_api and isinstance(new_api[0], list):
+            expected = new_api[0][0].lower()
+
+        is_hit = any(expected in r or r in expected for r in retrieved)
+        mrr = 1.0 / (retrieved.index(expected) + 1) if is_hit else 0.0
+
+        prompt = build_augmented_prompt(text, top_docs)
+
+        return prompt, retrieved, is_hit, mrr
+
+    # =========================
+    # PROMPT BUILDING
+    # =========================
+    rag_intent, _, hit, mrr = get_rag_prompt(intent)
     rag_rephrase, _, _, _ = get_rag_prompt(rewritten_intent)
 
-    if mrr_val == 0:
+    if mrr == 0:
         rag_intent = intent
         rag_rephrase = rewritten_intent
 
-    prompts_to_generate = [rag_intent, rag_rephrase]
-    
-    if portability != "":
-        port_prompt_raw = portability['replace_prompt'] if 'replace_prompt' in record else portability['prompt']
-        rag_port, _, _, _ = get_rag_prompt(port_prompt_raw)
-        prompts_to_generate.append(rag_port)
+    prompts = [rag_intent, rag_rephrase]
 
-    # Execute Batch Generation (Efficiently)
-    gen_strs_raw = batch_generate(model, tok, prompts_to_generate, max_length=256)
-    
-    # Process Predictions
-    _preds = [clean_pred(p) for p in gen_strs_raw]
-    
-    # Re-apply function extraction if necessary (matching your current logic)
+    port_prompt = None
+    if portability:
+        raw = portability.get('replace_prompt', portability.get('prompt', ''))
+        port_prompt, _, _, _ = get_rag_prompt(raw)
+        prompts.append(port_prompt)
+
+    # =========================
+    # GENERATION
+    # =========================
+    gen_raw = batch_generate(model, tok, prompts, max_length=256)
+    preds = [clean_pred(p) for p in gen_raw]
+
+    # safety
+    while len(preds) < 3:
+        preds.append("")
+
     if 'replace_prompt' in record:
-        _preds[0] = extract_first_func(record["replace_prompt"] + _preds[0])[len(record["prompt"]):]
-        _preds[1] = extract_first_func(record["replace_rephrase_prompt"] + _preds[1])[len(record["rephrase_prompt"]):]
-        if portability != "":
-            _preds[2] = extract_first_func(portability.get("replace_prompt", "") + _preds[2])[len(portability.get("prompt", "")):]
+        preds[0] = extract_first_func(record["replace_prompt"] + preds[0])[len(record["prompt"]):]
+        preds[1] = extract_first_func(record["replace_rephrase_prompt"] + preds[1])[len(record["rephrase_prompt"]):]
 
-    gen_strs = [extract_first_statement(p, False) for p in _preds]
-    
-    # API Extraction
-    gen_apis_prompt = [extract_apis_in_first_stmt(_preds[0], reference_dict, alias_dict)]
-    gen_apis_rephrase = [extract_apis_in_first_stmt(_preds[1], rephrase_reference_dict, alias_dict)]
-    gen_apis_portability = []
-    if portability != "":
-        gen_apis_portability = [extract_apis_in_first_stmt(_preds[2], portability['reference_dict'], portability['alias_dict'])]
+    gen_strs = [extract_first_statement(p, False) for p in preds]
 
-    # ==========================================
-    # 4. METRIC CALCULATION
-    # ==========================================
-    ret = {'efficacy': {}, 'generalization': {}, 'portability': {}, 'specificity': {}}
+    gen_api_0 = extract_apis_in_first_stmt(preds[0], reference_dict, alias_dict)
+    gen_api_1 = extract_apis_in_first_stmt(preds[1], rephrase_reference_dict, alias_dict)
 
-    for i, func in enumerate([
-        Metric.api_exact_match_for_efficacy, Metric.exact_match, Metric.bleu_score, Metric.rouge_score
-    ]):
-        m_name = MATCH_METRICS[i]
-        
-        # Efficacy
-        if gen_strs[0].strip() == '': ret['efficacy'][m_name] = 0
-        else:
-            ret['efficacy'][m_name] = func(gen_apis_prompt, new_api) if i == 0 else func([gen_strs[0].strip()], [target_snippet.strip()])
-        
-        # Generalization
-        if gen_strs[1].strip() == '': ret['generalization'][m_name] = 0
-        else:
-            ret['generalization'][m_name] = func(gen_apis_rephrase, new_api) if i == 0 else func([gen_strs[1].strip()], [rewritten_target.strip()])
-        
-        # Portability
-        if portability == "" or len(gen_strs) <= 2 or gen_strs[2].strip() == '': ret['portability'][m_name] = 0
-        else:
-            ret['portability'][m_name] = func(gen_apis_portability, new_api) if i == 0 else func([gen_strs[2].strip()], [portability['target_new'].strip()])
+    gen_api_2 = []
+    if portability:
+        gen_api_2 = extract_apis_in_first_stmt(
+            preds[2],
+            portability.get("reference_dict", {}),
+            portability.get("alias_dict", {})
+        )
 
-    # --- Specificity ---
-    spec_gens = []
-    for prompt in neighborhoods['prompts']:
-        spec_gens += batch_generate(model, tok, prompt, max_length=50)
-    
-    spec_preds = [clean_pred(p) for p in spec_gens]
-    spec_strs = [extract_first_statement(p, False) for p in spec_preds]
-    spec_apis = [extract_apis_in_first_stmt(p, {}, alias_dict) for p in spec_strs]
-    
-    for i, func in enumerate([Metric.exact_match, Metric.exact_match, Metric.bleu_score, Metric.rouge_score]):
-        if i == 0: ret['specificity'][MATCH_METRICS[i]] = np.mean(func(spec_apis, neighborhoods['pred-api'], True, True))
-        elif i == 1: ret['specificity'][MATCH_METRICS[i]] = np.mean(func(spec_strs, neighborhoods['ground_truth'], True))
-        else: ret['specificity'][MATCH_METRICS[i]] = np.mean(func(spec_strs, neighborhoods['ground_truth']))
-
-    # ==========================================
-    # 5. DEBUG & RETRIEVAL METRICS
-    # ==========================================
-    ret['retrieval_accuracy'] = 1.0 if is_ret_corr else 0.0
-    ret['mrr'] = mrr_val
-    ret['debug_info'] = {
-        'target_snippet': target_snippet.strip(),
-        'model_prediction': gen_strs[0].strip() if gen_strs else "",
-        'expected_api': new_api[0][0] if (new_api and len(new_api) > 0 and isinstance(new_api[0], list)) else "",
-        'retrieved_from_kb': retrieved_apis,
-        'is_retrieval_correct': is_ret_corr,
-        'mrr': mrr_val,
-        'full_prompt': rag_intent
+    # =========================
+    # METRICS
+    # =========================
+    ret = {
+        "efficacy": {},
+        "generalization": {},
+        "portability": {},
+        "specificity": {},
+        "retrieval_accuracy": float(hit),
+        "mrr": mrr,
+        "debug_info": {
+            "prediction": gen_strs[0] if gen_strs else "",
+            "target": target_snippet,
+        }
     }
 
+    metrics_funcs = [
+        Metric.api_exact_match_for_efficacy,
+        Metric.exact_match,
+        Metric.bleu_score,
+        Metric.rouge_score,
+    ]
+
+    for i, func in enumerate(metrics_funcs):
+        name = MATCH_METRICS[i]
+
+        # efficacy
+        ret["efficacy"][name] = (
+            func(gen_api_0, new_api)
+            if i == 0 else func([gen_strs[0]], [target_snippet])
+        )
+
+        # generalization
+        ret["generalization"][name] = (
+            func(gen_api_1, new_api)
+            if i == 0 else func([gen_strs[1]], [rewritten_target])
+        )
+
+        # portability
+        if not portability or len(gen_strs) < 3:
+            ret["portability"][name] = 0
+        else:
+            ret["portability"][name] = (
+                func(gen_api_2, new_api)
+                if i == 0 else func([gen_strs[2]], [portability.get("target_new", "")])
+            )
+
+    # =========================
+    # SPECIFICITY
+    # =========================
+    spec_preds = []
+    for p in neighborhoods['prompts']:
+        spec_preds += batch_generate(model, tok, p, max_length=50)
+
+    spec_clean = [extract_first_statement(clean_pred(p), False) for p in spec_preds]
+    spec_apis = [extract_apis_in_first_stmt(p, {}, alias_dict) for p in spec_clean]
+
+    ret["specificity"] = {
+        MATCH_METRICS[0]: np.mean(Metric.exact_match(spec_apis, neighborhoods['pred-api'], True, True)),
+        MATCH_METRICS[1]: np.mean(Metric.exact_match(spec_clean, neighborhoods['ground_truth'], True)),
+        MATCH_METRICS[2]: Metric.bleu_score(spec_clean, neighborhoods['ground_truth']),
+        MATCH_METRICS[3]: Metric.rouge_score(spec_clean, neighborhoods['ground_truth']),
+    }
+
+    # =========================
+    # OPTIONAL TEST GEN
+    # =========================
     if test_generation:
         try:
-            res = test_generation_quality(model, tok, [intent, rewritten_intent], max_out_len=50)
-            ret.update(res)
-        except Exception as e:
-            pass # Keep evaluation running
-            
+            ret.update(
+                test_generation_quality(
+                    model, tok,
+                    [intent, rewritten_intent],
+                    max_out_len=50
+                )
+            )
+        except Exception:
+            pass
+
     return ret
